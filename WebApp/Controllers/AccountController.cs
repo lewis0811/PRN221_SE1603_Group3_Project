@@ -54,6 +54,21 @@ namespace WebApp.Controllers
             }
             return View(registerViewModel);
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> SignIn(SignInVm signInViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signInManager.PasswordSignInAsync(signInViewModel.Email, signInViewModel.Password, signInViewModel.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                AddError(result);
+            }
+            return View(signInViewModel);
+        }
 
         private void AddError(IdentityResult result)
         {

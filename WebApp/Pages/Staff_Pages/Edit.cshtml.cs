@@ -8,20 +8,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Staff_Pages
 {
     public class EditModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EditModel(DataAccess.Context.ApplicationDbContext context)
+        public EditModel(DataAccess.Context.ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        [BindProperty]
-        public Staff Staff { get; set; }
+        [BindProperty] public Staff Staff { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,14 +32,15 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs
-                .Include(s => s.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+            Staff = _unitOfWork.Staff.Get().AsQueryable().Include(s=> s.ApplicationUser).FirstOrDefault(m=> m.Id == id);
+
 
             if (Staff == null)
             {
                 return NotFound();
             }
-           ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+
+            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return Page();
         }
 
