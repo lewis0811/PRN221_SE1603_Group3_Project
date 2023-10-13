@@ -7,24 +7,26 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Store_Pages
 {
     public class IndexModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public IndexModel(DataAccess.Context.ApplicationDbContext context)
+        public IndexModel(DataAccess.Context.ApplicationDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public IList<LaundryStore> LaundryStore { get;set; }
 
         public async Task OnGetAsync()
         {
-            LaundryStore = await _context.LaundryStores
-                .Include(l => l.ApplicationUser).ToListAsync();
+            LaundryStore =  _unitOfWork.LaundryStore.Get().AsQueryable().Include(l=> l.ApplicationUser).ToList();
         }
     }
 }
