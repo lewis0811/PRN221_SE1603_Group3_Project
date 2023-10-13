@@ -25,11 +25,12 @@ namespace WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DB")));
+            services.AddRazorPages();
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-
+            services.AddResponseCaching();
+            services.AddResponseCompression();
             //Auto mapper Configuration
             var mapperConfig = new MapperConfiguration(mc =>
             {

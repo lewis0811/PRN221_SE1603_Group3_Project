@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -13,9 +14,10 @@ namespace Domain.Entities
         [ForeignKey("Staff")]
         public int StaffId { get; set; }
 
-        public bool Status { get; set; }
+        [EnumDataType(typeof(ShippingType), ErrorMessage = "Invalid Shipping type")]
+        public ShippingType Type { get; set; }
 
-        public bool Type { get; set; }
+        public bool Status { get; set; }
 
         // Navigation property for the related Order
         public Order Order { get; set; }

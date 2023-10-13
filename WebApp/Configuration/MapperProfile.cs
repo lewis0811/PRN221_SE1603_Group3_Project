@@ -11,6 +11,12 @@ namespace WebApp.Configuration
             CreateMap<Customer, CustomerVM>().ReverseMap();
             CreateMap<Staff, StaffVM>().ReverseMap();
             CreateMap<LaundryStore, LaundryStoreVM>().ReverseMap();
+            CreateMap<Service, ServiceVM>().ReverseMap();
+            CreateMap<StoreService, StoreServiceVM>().ReverseMap();
+            CreateMap<Shipping, ShippingVM>().ReverseMap();
+            CreateMap<Order, OrderVM>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailVM>().ReverseMap();
+
         }
     }
 }

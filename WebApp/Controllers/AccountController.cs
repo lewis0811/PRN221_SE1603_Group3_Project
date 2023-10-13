@@ -65,7 +65,7 @@ namespace WebApp.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                AddError(result);
+                //AddError(result);
             }
             return View(signInViewModel);
         }

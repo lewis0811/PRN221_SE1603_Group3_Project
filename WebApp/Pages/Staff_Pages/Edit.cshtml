@@ -20,6 +20,11 @@
                 <span asp-validation-for="Staff.ApplicationUserId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Staff.JobPosition" class="control-label"></label>
+                <select asp-for="Staff.JobPosition" class="form-control"></select>
+                <span asp-validation-for="Staff.JobPosition" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Staff.Name" class="control-label"></label>
                 <input asp-for="Staff.Name" class="form-control" />
                 <span asp-validation-for="Staff.Name" class="text-danger"></span>

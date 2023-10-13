@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
 
-namespace WebApp.Pages.Staff_Pages
+namespace WebApp.Pages.LaundryStore_Pages
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace WebApp.Pages.Staff_Pages
         }
 
         [BindProperty]
-        public Staff Staff { get; set; }
+        public LaundryStore LaundryStore { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,10 +30,10 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs
-                .Include(s => s.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+            LaundryStore = await _context.LaundryStores
+                .Include(l => l.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Staff == null)
+            if (LaundryStore == null)
             {
                 return NotFound();
             }
@@ -50,7 +50,7 @@ namespace WebApp.Pages.Staff_Pages
                 return Page();
             }
 
-            _context.Attach(Staff).State = EntityState.Modified;
+            _context.Attach(LaundryStore).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +58,7 @@ namespace WebApp.Pages.Staff_Pages
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!StaffExists(Staff.Id))
+                if (!LaundryStoreExists(LaundryStore.Id))
                 {
                     return NotFound();
                 }
@@ -71,9 +71,9 @@ namespace WebApp.Pages.Staff_Pages
             return RedirectToPage("./Index");
         }
 
-        private bool StaffExists(int id)
+        private bool LaundryStoreExists(int id)
         {
-            return _context.Staffs.Any(e => e.Id == id);
+            return _context.LaundryStores.Any(e => e.Id == id);
         }
     }
 }
