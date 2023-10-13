@@ -1,4 +1,7 @@
-using DataAccess;
+using AutoMapper;
+using DataAccess.Context;
+using DataAccess.Implementation;
+using Domain.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -6,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApp.Configuration;
 
 namespace WebApp
 {
@@ -24,8 +28,19 @@ namespace WebApp
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DB")));
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-            
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            //Auto mapper Configuration
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
         }
+
+        
+        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

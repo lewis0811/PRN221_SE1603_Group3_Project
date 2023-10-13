@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "WebApp\WebApp.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{108932D7-BF0D-408D-B46A-57012B3660FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessObject", "BusinessObject\BusinessObject.csproj", "{5BD710D1-C1DA-409C-BE5B-C3CF1B27279B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{830E04F9-8A65-4007-B6C5-1AF6429795E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{108932D7-BF0D-408D-B46A-57012B3660FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{108932D7-BF0D-408D-B46A-57012B3660FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{108932D7-BF0D-408D-B46A-57012B3660FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5BD710D1-C1DA-409C-BE5B-C3CF1B27279B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5BD710D1-C1DA-409C-BE5B-C3CF1B27279B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5BD710D1-C1DA-409C-BE5B-C3CF1B27279B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5BD710D1-C1DA-409C-BE5B-C3CF1B27279B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{830E04F9-8A65-4007-B6C5-1AF6429795E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{830E04F9-8A65-4007-B6C5-1AF6429795E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{830E04F9-8A65-4007-B6C5-1AF6429795E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{830E04F9-8A65-4007-B6C5-1AF6429795E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
