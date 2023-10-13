@@ -1,5 +1,6 @@
 ﻿
 using DataAccess;
+using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
