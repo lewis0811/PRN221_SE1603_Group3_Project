@@ -48,7 +48,7 @@ namespace WebApp.Pages.LaundryStore_Pages
                 return NotFound();
             }
 
-            LaundryStore = _mapper.Map<LaundryStoreVM>(_unitOfWork.LaundryStore.Get().Where(c => c.Id == id).FirstOrDefault());
+            LaundryStore = _mapper.Map<LaundryStoreVM>(_unitOfWork.LaundryStore.Get().FirstOrDefault(c => c.Id == id));
 
             if (LaundryStore != null)
             {
