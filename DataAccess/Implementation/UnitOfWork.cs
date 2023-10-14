@@ -22,6 +22,7 @@ namespace DataAccess.Implementation
             Shipping = new ShippingRepository(_context);
             StoreService = new StoreServiceRepository(_context);
             LaundryStore = new LaundryStoreRepository(_context);
+            OrderDetail = new OrderDetailRepository(_context);
         }
 
         public IServiceRepository Service {  get; set; }
@@ -37,6 +38,8 @@ namespace DataAccess.Implementation
         public IStoreServiceRepository StoreService { get; set; }
 
         public ILaundryStoreRepository LandryStore { get; set; }
+
+        public IOrderDetailRepository OrderDetail { get; set; }
 
         public void Dispose()
         {

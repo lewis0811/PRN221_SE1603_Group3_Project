@@ -14,6 +14,7 @@ namespace Domain.Repository
         public IStaffRepository Staff { get; }
         public IShippingRepository Shipping { get; }
         public IStoreServiceRepository StoreService { get; }
+        public IOrderDetailRepository OrderDetail { get; }
         public ILaundryStoreRepository LandryStore { get; }
 
         public void Save();
