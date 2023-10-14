@@ -20,7 +20,7 @@
                 @Html.DisplayNameFor(model => model.Service[0].Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Service[0].OrderDetail)
+                @Html.DisplayNameFor(model => model.Service[0].OrderDetail.Quantity)
             </th>
             <th></th>
         </tr>
@@ -35,7 +35,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @* @Html.DisplayFor(modelItem => item.OrderDetail) *@
+                @Html.DisplayFor(modelItem => item.OrderDetail.Quantity)
 
             </td>
             <td>

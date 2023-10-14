@@ -31,6 +31,7 @@ namespace WebApp
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddResponseCaching();
             services.AddResponseCompression();
+
             //Auto mapper Configuration
             var mapperConfig = new MapperConfiguration(mc =>
             {
@@ -38,6 +39,8 @@ namespace WebApp
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            //services.AddAutoMapper(typeof(MapperProfile));
         }
 
         

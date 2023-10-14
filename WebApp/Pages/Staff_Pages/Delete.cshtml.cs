@@ -7,20 +7,24 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using AutoMapper;
+using WebApp.ViewModels;
 
 namespace WebApp.Pages.Staff_Pages
 {
     public class DeleteModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public DeleteModel(DataAccess.Context.ApplicationDbContext context)
+        public DeleteModel(DataAccess.Context.ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [BindProperty]
-        public Staff Staff { get; set; }
+        public StaffVM Staff { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,8 +33,8 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs
-                .Include(s => s.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+            Staff = _mapper.Map<StaffVM>(_context.Staffs
+                .Include(s => s.ApplicationUser).FirstOrDefault(m => m.Id == id));
 
             if (Staff == null)
             {
@@ -46,12 +50,12 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs.FindAsync(id);
+            //Staff = _mapper.Map<StaffVM>( _context.Staffs.Find(id));
 
             if (Staff != null)
             {
-                _context.Staffs.Remove(Staff);
-                await _context.SaveChangesAsync();
+                _context.Staffs.Remove(_mapper.Map<Staff>(_context.Staffs.Find(id)));
+                _context.SaveChanges();
             }
 
             return RedirectToPage("./Index");
