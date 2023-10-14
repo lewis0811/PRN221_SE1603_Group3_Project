@@ -38,6 +38,7 @@ namespace WebApp
             });
 
             IMapper mapper = mapperConfig.CreateMapper();
+            services.AddAutoMapper(typeof(MapperProfile));
         }
 
         
