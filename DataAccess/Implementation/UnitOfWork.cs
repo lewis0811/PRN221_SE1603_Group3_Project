@@ -22,8 +22,10 @@ namespace DataAccess.Implementation
             Shipping = new ShippingRepository(_context);
             StoreService = new StoreServiceRepository(_context);
             LaundryStore = new LaundryStoreRepository(_context);
+            User = new ApplicationUserRepository(_context);
         }
 
+        public IApplicationUserRepository User {  get; set; }
         public IServiceRepository Service {  get; set; }
 
         public ICustomerRepository Customer { get; set; }

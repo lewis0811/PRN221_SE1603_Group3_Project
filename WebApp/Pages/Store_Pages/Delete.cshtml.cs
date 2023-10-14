@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Store_Pages
 {
     public class DeleteModel : PageModel
     {
-        private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteModel(DataAccess.Context.ApplicationDbContext context)
+        public DeleteModel(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         [BindProperty]
@@ -29,7 +30,7 @@ namespace WebApp.Pages.Store_Pages
                 return NotFound();
             }
 
-            LaundryStore = await _context.LaundryStores
+            LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
                 .Include(l => l.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
 
             if (LaundryStore == null)
@@ -46,12 +47,12 @@ namespace WebApp.Pages.Store_Pages
                 return NotFound();
             }
 
-            LaundryStore = await _context.LaundryStores.FindAsync(id);
+            LaundryStore = _unitOfWork.LaundryStore.Get().FirstOrDefault(c => c.Id == id);
 
             if (LaundryStore != null)
             {
-                _context.LaundryStores.Remove(LaundryStore);
-                await _context.SaveChangesAsync();
+                _unitOfWork.LaundryStore.Delete(LaundryStore);
+                _unitOfWork.Save();
             }
 
             return RedirectToPage("./Index");

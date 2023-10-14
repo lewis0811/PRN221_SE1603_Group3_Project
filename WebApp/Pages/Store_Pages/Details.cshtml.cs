@@ -7,16 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Store_Pages
 {
     public class DetailsModel : PageModel
     {
-        private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public DetailsModel(DataAccess.Context.ApplicationDbContext context)
+        public DetailsModel(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public LaundryStore LaundryStore { get; set; }
@@ -28,7 +29,7 @@ namespace WebApp.Pages.Store_Pages
                 return NotFound();
             }
 
-            LaundryStore = await _context.LaundryStores
+            LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
                 .Include(l => l.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
 
             if (LaundryStore == null)

@@ -7,21 +7,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Store_Pages
 {
     public class CreateModel : PageModel
     {
-        private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateModel(DataAccess.Context.ApplicationDbContext context)
+        public CreateModel(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public IActionResult OnGet()
         {
-        ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+        ViewData["ApplicationUserId"] = new SelectList(_unitOfWork.User.Get(), "Id", "Id");
             return Page();
         }
 
@@ -36,8 +37,8 @@ namespace WebApp.Pages.Store_Pages
                 return Page();
             }
 
-            _context.LaundryStores.Add(LaundryStore);
-            await _context.SaveChangesAsync();
+            _unitOfWork.LaundryStore.Add(LaundryStore);
+            _unitOfWork.Save();
 
             return RedirectToPage("./Index");
         }

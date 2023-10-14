@@ -8,6 +8,7 @@ namespace Domain.Repository
 {
     public interface IUnitOfWork : IDisposable
     {
+        public IApplicationUserRepository User { get; }
         public IServiceRepository Service {  get; }
         public ICustomerRepository Customer { get; }
         public ILaundryStoreRepository LaundryStore { get; }
