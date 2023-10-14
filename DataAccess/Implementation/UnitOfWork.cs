@@ -23,6 +23,8 @@ namespace DataAccess.Implementation
             StoreService = new StoreServiceRepository(_context);
             LaundryStore = new LaundryStoreRepository(_context);
             User = new ApplicationUserRepository(_context);
+            OrderDetail = new OrderDetailRepository(_context);
+
         }
 
         public IApplicationUserRepository User {  get; set; }
@@ -39,6 +41,8 @@ namespace DataAccess.Implementation
         public IStoreServiceRepository StoreService { get; set; }
 
         public ILaundryStoreRepository LandryStore { get; set; }
+
+        public IOrderDetailRepository OrderDetail { get; set; }
 
         public void Dispose()
         {
