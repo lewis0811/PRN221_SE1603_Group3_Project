@@ -9,7 +9,7 @@ using DataAccess.Context;
 using Domain.Entities;
 using Domain.Repository;
 
-namespace WebApp.Pages.LaundryStore_Pages
+namespace WebApp.Pages.StoreService_Pages
 {
     public class IndexModel : PageModel
     {
@@ -20,12 +20,13 @@ namespace WebApp.Pages.LaundryStore_Pages
             _unitOfWork = unitOfWork;
         }
 
-        public IList<LaundryStore> LaundryStore { get;set; }
+        public IList<StoreService> StoreService { get;set; }
 
         public async Task OnGetAsync()
         {
-            LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
-                .Include(l => l.ApplicationUser).ToListAsync();
+            StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .Include(s => s.LaundryStore)
+                .Include(s => s.Service).ToListAsync();
         }
     }
 }

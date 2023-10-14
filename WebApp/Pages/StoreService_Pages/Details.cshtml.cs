@@ -8,23 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
 using Domain.Repository;
-using WebApp.ViewModels;
-using AutoMapper;
 
-namespace WebApp.Pages.LaundryStore_Pages
+namespace WebApp.Pages.StoreService_Pages
 {
     public class DetailsModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
-        public DetailsModel(IUnitOfWork unitOfWork, IMapper mapper)
+        public DetailsModel(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
         }
 
-        public LaundryStoreVM LaundryStore { get; set; }
+        public StoreService StoreService { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -33,10 +29,11 @@ namespace WebApp.Pages.LaundryStore_Pages
                 return NotFound();
             }
 
-            LaundryStore = _mapper.Map<LaundryStoreVM>(_unitOfWork.LaundryStore.Get().AsQueryable()
-                .Include(l => l.ApplicationUser).FirstOrDefault(m => m.Id == id));
+            StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .Include(s => s.LaundryStore)
+                .Include(s => s.Service).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (LaundryStore == null)
+            if (StoreService == null)
             {
                 return NotFound();
             }
