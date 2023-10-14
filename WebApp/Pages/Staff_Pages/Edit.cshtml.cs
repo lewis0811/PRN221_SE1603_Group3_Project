@@ -2,26 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
+using WebApp.ViewModels;
 
 namespace WebApp.Pages.Staff_Pages
 {
     public class EditModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public EditModel(DataAccess.Context.ApplicationDbContext context)
+        public EditModel(DataAccess.Context.ApplicationDbContext context, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        [BindProperty]
-        public Staff Staff { get; set; }
+        [BindProperty] public StaffVM Staff { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,14 +36,15 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs
-                .Include(s => s.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
-
+            var staffEntity = _unitOfWork.Staff.Get().AsQueryable().Include(s => s.ApplicationUser)
+                .FirstOrDefault(m => m.Id == id);
+            Staff = _mapper.Map<StaffVM>(staffEntity);
             if (Staff == null)
             {
                 return NotFound();
             }
-           ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+
+            ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return Page();
         }
 
@@ -50,11 +57,12 @@ namespace WebApp.Pages.Staff_Pages
                 return Page();
             }
 
-            _context.Attach(Staff).State = EntityState.Modified;
+            var staffEntity = _mapper.Map<Staff>(Staff);
+            _unitOfWork.Staff.Update(staffEntity);
 
             try
             {
-                await _context.SaveChangesAsync();
+                _unitOfWork.Save();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -73,7 +81,7 @@ namespace WebApp.Pages.Staff_Pages
 
         private bool StaffExists(int id)
         {
-            return _context.Staffs.Any(e => e.Id == id);
+            return _unitOfWork.Staff.Get().Any(e => e.Id == id);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@page
+@using Domain.Enums
 @model WebApp.Pages.Staff_Pages.EditModel
 
 @{
@@ -8,12 +9,12 @@
 <h1>Edit</h1>
 
 <h4>Staff</h4>
-<hr />
+<hr/>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Staff.Id" />
+            <input type="hidden" asp-for="Staff.Id"/>
             <div class="form-group">
                 <label asp-for="Staff.ApplicationUserId" class="control-label"></label>
                 <select asp-for="Staff.ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
@@ -21,26 +22,31 @@
             </div>
             <div class="form-group">
                 <label asp-for="Staff.JobPosition" class="control-label"></label>
-                <select asp-for="Staff.JobPosition" class="form-control"></select>
+                <select asp-for="Staff.JobPosition" class="form-control">
+                    @foreach (var item in Enum.GetValues(typeof(JobPosition)))
+                    {
+                        <option value="@Enum.GetValues(typeof(JobPosition))">@item</option>
+                    }
+                </select>
                 <span asp-validation-for="Staff.JobPosition" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Staff.Name" class="control-label"></label>
-                <input asp-for="Staff.Name" class="form-control" />
+                <input asp-for="Staff.Name" class="form-control"/>
                 <span asp-validation-for="Staff.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Staff.Age" class="control-label"></label>
-                <input asp-for="Staff.Age" class="form-control" />
+                <input asp-for="Staff.Age" class="form-control"/>
                 <span asp-validation-for="Staff.Age" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Staff.Address" class="control-label"></label>
-                <input asp-for="Staff.Address" class="form-control" />
+                <input asp-for="Staff.Address" class="form-control"/>
                 <span asp-validation-for="Staff.Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-primary"/>
             </div>
         </form>
     </div>
@@ -51,5 +57,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
