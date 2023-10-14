@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.ViewModels
 {
@@ -19,5 +20,8 @@ namespace WebApp.ViewModels
 
         [StringLength(100, ErrorMessage = "Address must be at most 100 characters")]
         public string Address { get; set; }
+
+        [EnumDataType(typeof(JobPosition), ErrorMessage = "Invalid job position")]
+        public JobPosition JobPosition { get; set; }
     }
 }

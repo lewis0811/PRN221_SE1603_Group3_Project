@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -10,6 +11,8 @@ namespace Domain.Entities
         [ForeignKey(nameof(ApplicationUser))]
         public string ApplicationUserId { get; set; }
 
+        [EnumDataType(typeof(JobPosition), ErrorMessage = "Invalid job position")]
+        public JobPosition JobPosition { get; set; }
         [Required(ErrorMessage = "Name is required")]
         [StringLength(30, ErrorMessage = "Name must be at most 30 characters")]
         public string Name { get; set; }
@@ -19,6 +22,8 @@ namespace Domain.Entities
 
         [StringLength(100, ErrorMessage = "Address must be at most 100 characters")]
         public string Address { get; set; }
+
+        
 
         public ApplicationUser ApplicationUser { get; set; }
     }
