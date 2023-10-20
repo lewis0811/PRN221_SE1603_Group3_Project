@@ -14,33 +14,19 @@
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">LaundryGO</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarColor01">
+                <div class="collapse navbar-collapse" id="navbarColor03">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link active" href="/Index">
                                 Home
                                 <span class="visually-hidden">(current)</span>
                             </a>
                         </li>
-                        @* <li class="nav-item">
-                            <a class="nav-link" asp-page="/Customer_Pages/Index">Customer</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Staff_Pages/Index">Staff</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Services/Index">Services</a>
-                        </li>
                         
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/StoreService_Pages/Index">Store Services</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/Store_Pages/Index">Store</a>
-                        </li> *@
+
                         <div class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Management
@@ -63,18 +49,21 @@
                                 <a class="dropdown-item" href="#">Separated link</a>
                             </div>
                         </li> *@
+                        <partial name="_LoginPartialCustom" />
                     </ul>
+
 @*                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="search" placeholder="Search">
                         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                     </form> *@
                 </div>
+                
             </div>
         </nav>
 
     </header>
     <div class="container">
-        <main role="main" class="pb-3">
+        <main role="main" class="p-3">
             @RenderBody()
         </main>
     </div>

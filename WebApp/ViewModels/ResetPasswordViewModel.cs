@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.ViewModels
 {
-    public class RegisterViewModel
+    public class ResetPasswordViewModel
     {
         [Required]
         [EmailAddress]
@@ -22,10 +20,6 @@ namespace WebApp.ViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        public string Name { get; set; }
-
-        public IEnumerable<SelectListItem>? RoleList { get; set; }
-        public string RoleSelected { get; set; }
-    }   
+        public string Code { get; set; } 
+    }
 }
