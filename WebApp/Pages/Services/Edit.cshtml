@@ -14,11 +14,7 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Service.Id" />
-            <div class="form-group">
-                <label asp-for="Service.OrderDetailId" class="control-label"></label>
-                <select asp-for="Service.OrderDetailId" class="form-control" asp-items="ViewBag.OrderDetailId"></select>
-                <span asp-validation-for="Service.OrderDetailId" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Service.Name" class="control-label"></label>
                 <input asp-for="Service.Name" class="form-control" />

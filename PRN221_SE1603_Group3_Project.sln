@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\Da
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{830E04F9-8A65-4007-B6C5-1AF6429795E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailJet", "MailJet\MailJet.csproj", "{EADB9E40-A95A-4282-AF9B-353C0603329C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MailJet", "MailJet\MailJet.csproj", "{EADB9E40-A95A-4282-AF9B-353C0603329C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

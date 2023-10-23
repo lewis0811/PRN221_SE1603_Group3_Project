@@ -19,8 +19,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Service[0].Description)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.Service[0].OrderDetail.Quantity)
+                <label asp-for="@Model.Service[0].ImgUrl"></label>
             </th>
             <th></th>
         </tr>
@@ -35,8 +36,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.OrderDetail.Quantity)
-
+                <img src="@item.ImgUrl" width="100">
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

@@ -4,14 +4,16 @@ using DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231023153520_UpdateService")]
+    partial class UpdateService
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -115,15 +117,9 @@ namespace DataAccess.Migrations
                     b.Property<short>("Quantity")
                         .HasColumnType("smallint");
 
-                    b.Property<int>("ServiceId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("ServiceId")
-                        .IsUnique();
 
                     b.ToTable("OrderDetails");
                 });
@@ -147,7 +143,12 @@ namespace DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("OrderDetailId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderDetailId");
 
                     b.ToTable("Services");
                 });
@@ -490,15 +491,18 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Service", "Services")
-                        .WithOne("OrderDetail")
-                        .HasForeignKey("Domain.Entities.OrderDetail", "ServiceId")
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Service", b =>
+                {
+                    b.HasOne("Domain.Entities.OrderDetail", "OrderDetail")
+                        .WithMany("Services")
+                        .HasForeignKey("OrderDetailId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
-
-                    b.Navigation("Services");
+                    b.Navigation("OrderDetail");
                 });
 
             modelBuilder.Entity("Domain.Entities.Shipping", b =>
@@ -611,9 +615,9 @@ namespace DataAccess.Migrations
                     b.Navigation("Shippings");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Service", b =>
+            modelBuilder.Entity("Domain.Entities.OrderDetail", b =>
                 {
-                    b.Navigation("OrderDetail");
+                    b.Navigation("Services");
                 });
 #pragma warning restore 612, 618
         }

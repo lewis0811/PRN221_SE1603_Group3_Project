@@ -7,9 +7,6 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        [ForeignKey("OrderDetail")]
-        public int OrderDetailId { get; set; }
-
         [Required(ErrorMessage = "Name is required")]
         [StringLength(100, ErrorMessage = "Name must be at most 100 characters")]
         public string Name { get; set; }
@@ -17,7 +14,9 @@ namespace Domain.Entities
         [StringLength(200, ErrorMessage = "Description must be at most 200 characters")]
         public string Description { get; set; }
 
+        public string? ImgUrl { get; set; }
+
         // Navigation property for the related OrderDetail
-        public OrderDetail OrderDetail { get; set; }
+        public OrderDetail? OrderDetail { get; set; }
     }
 }

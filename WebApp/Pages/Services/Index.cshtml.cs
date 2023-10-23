@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using DataAccess.Context;
 using Domain.Entities;
 using Domain.Repository;
 
@@ -25,7 +24,7 @@ namespace WebApp.Pages.Services
         public async Task OnGetAsync()
         {
             Service = await _unitOfWork.Service.Get().AsQueryable()
-                .Include(s => s.OrderDetail).ToListAsync();
+                .ToListAsync();
         }
     }
 }

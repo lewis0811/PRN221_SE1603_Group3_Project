@@ -11,6 +11,9 @@ namespace Domain.Entities
         [ForeignKey("Order")]
         public int OrderId { get; set; }
 
+        [ForeignKey(nameof(Service))]
+        public int ServiceId { get; set; }
+
         [Range(1, 10, ErrorMessage = "Quantity must be at least 1")]
         public short Quantity { get; set; }
 
@@ -18,6 +21,6 @@ namespace Domain.Entities
         public Order Order { get; set; }
 
         // Navigation property for a collection of related Services
-        public ICollection<Service> Services { get; set; }
+        public Service Services { get; set; }
     }
 }
