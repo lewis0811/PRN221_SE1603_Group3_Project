@@ -1,0 +1,49 @@
+﻿@page
+@model WebApp.Pages.Cart.CartModel
+@{
+}
+<form method="post">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>
+                    ID
+                </td>
+                <td>
+                    Service Name
+                </td>
+                <td>
+                    Image
+                </td>
+                <td>
+                    LaundryStore
+                </td>
+                <td>
+                    Quantity
+                </td>
+                <td>
+                    Total Price
+                </td>
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.StoreService.Service.Name</td>
+                    <td>
+                        <img src="@item.StoreService.Service.ImgUrl" style="width: 50px">
+                    </td>
+                    <td>@item.StoreService.LaundryStore.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.TotalPrice</td>
+                </tr>
+            } 
+        </tbody>
+            
+    </table>
+
+    <button class="btn btn-success" type="submit">Đặt hàng</button>
+</form>

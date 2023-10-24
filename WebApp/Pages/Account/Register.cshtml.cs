@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Domain.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,12 +19,14 @@ namespace WebApp.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager)
+        public RegisterModel(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> OnGet()
@@ -89,16 +92,37 @@ namespace WebApp.Pages.Account
                     else if (RegisterViewModel.RoleSelected == "Staff")
                     {
                         await _userManager.AddToRoleAsync(user, "Staff");
+                        _unitOfWork.Staff.Add(new Staff() {
+                            Name = RegisterViewModel.Name,
+                            Address = "No edit yet",
+                            Age = 18,
+                            JobPosition = 0,
+                            ApplicationUserId = user.Id
+                        });
                     }
                     else if (RegisterViewModel.RoleSelected == "Customer")
                     {
                         await _userManager.AddToRoleAsync(user, "Customer");
+                        _unitOfWork.Customer.Add(new Customer()
+                        {
+                            ApplicationUserId = user.Id,
+                            Name = RegisterViewModel.Name,
+                            Address = "No edit yet", 
+                        });
                     }
                     else if (RegisterViewModel.RoleSelected == "LaundryStore")
                     {
                         await _userManager.AddToRoleAsync(user, "LaundryStore");
+                        _unitOfWork.LandryStore.Add(new LaundryStore()
+                        {
+                            ApplicationUserId= user.Id,
+                            Name = RegisterViewModel.Name,
+                            Address = "No edit yet",
+                            Capacity = 5,
+                            Status = true,
+                        });
                     }
-
+                    _unitOfWork.Save();
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToPage("/Index");
                 }

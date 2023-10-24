@@ -15,6 +15,7 @@ namespace DataAccess.Implementation
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
+            Order = new OrderRepository(_context);
             Service = new ServiceRepository(_context);
             Customer = new CustomerRepository(_context);
             LaundryStore = new LaundryStoreRepository(_context);
@@ -29,6 +30,7 @@ namespace DataAccess.Implementation
 
         public IApplicationUserRepository User {  get; set; }
         public IServiceRepository Service {  get; set; }
+        public IOrderRepository Order { get; set; }
 
         public ICustomerRepository Customer { get; set; }
 

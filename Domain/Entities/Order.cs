@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -13,10 +12,7 @@ namespace Domain.Entities
         public int CustomerId { get; set; }
 
         public DateTime OrderTime { get; set; }
-
-        [Required(ErrorMessage = "TotalPrice is required")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "TotalPrice must be greater than 0.01")]
-        public double TotalPrice { get; set; } = 0;
+        public bool IsPayed { get; set; }
 
         // Navigation property for the related Customer
         public Customer Customer { get; set; }
@@ -27,5 +23,4 @@ namespace Domain.Entities
         // Navigation property for a collection of related Shippings
         public ICollection<Shipping> Shippings { get; set; }
     }
-
 }

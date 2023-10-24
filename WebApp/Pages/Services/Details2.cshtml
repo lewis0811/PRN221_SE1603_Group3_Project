@@ -2,9 +2,13 @@
 @model WebApp.Pages.Services.Details2Model
 @{
 }
+<form method="post">
+
+
 <div class="container">
     <div class=" main-section bg-white">
-
+        <input type="hidden" asp-for="@Model.Customer.Id" value="@Model.Customer.Id"/>
+        <input type="hidden" asp-for="@Model.StoreService.ServiceId" value="@Model.Service.Id"/>
         <div class="row m-0">
             <div class="col-lg-4 ">
                 <img src="@Model.Service.ImgUrl" class="border" width="100%">
@@ -27,30 +31,35 @@
                             <h5>Chọn cửa hàng</h5>
                             <select class="form-control" asp-for="@Model.StoreService.LaundryStoreId">
                                 <option selected disabled>-- Chọn cửa hàng --</option>
-                                @foreach(var item in Model.LaundryStores)
+                                @foreach(var item in Model.StoreServices)
                                 {
-                                    <option value="@item.Id">@item.Name</option>
+                                    <option value="@item.LaundryStoreId">@item.LaundryStore.Name</option>
                                 }
                             </select>
                             <hr class="m-0 pt-2 mt-2">
                         </div>
                         <div class="col-lg-12">
                             <h6>Số lượng :</h6>
-                            <input type="number" class="form-control text-center w-100" value="1" min="1" max="5">
+                            <input type="number" asp-for="@Model.OrderDetail.Quantity" class="form-control text-center w-100" value="1" min="1" max="5">
                         </div>
                         <div class="col-lg-12 mt-3">
                             <div class="row">
                                 <div class="col-lg-6 pb-2">
-                                    <a href="#" class="btn btn-danger w-100">Add To Cart</a>
+                                    <input type="submit" asp-page-handler="Cart"
+                                        class="btn btn-danger w-100" value="Add To Cart">
                                 </div>
                                 <div class="col-lg-6">
-                                    <a href="#" class="btn btn-success w-100">Shop Now</a>
+                                    <input type="submit" asp-page-handler="Shop" 
+                                        class="btn btn-success w-100" value="Shop Now">
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>    
     </div>
 </div>
+
+</form>

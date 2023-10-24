@@ -30,7 +30,7 @@ namespace WebApp.Pages.Services
             }
 
             Service = await _unitOfWork.Service.Get().AsQueryable()
-                .Include(s => s.OrderDetail).FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id);
 
             if (Service == null)
             {

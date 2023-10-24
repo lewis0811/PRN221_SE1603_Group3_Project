@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -15,8 +16,7 @@ namespace Domain.Entities
         public string Description { get; set; }
 
         public string? ImgUrl { get; set; }
-
-        // Navigation property for the related OrderDetail
-        public OrderDetail? OrderDetail { get; set; }
+        
+        public virtual List<StoreService> Services { get; set; }
     }
 }

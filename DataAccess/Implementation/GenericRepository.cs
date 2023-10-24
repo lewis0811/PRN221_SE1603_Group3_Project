@@ -14,9 +14,10 @@ namespace DataAccess.Implementation
             _context = context;
         }
 
-        public void Add(T item)
+        public T Add(T item)
         {
-            _context.Set<T>().Add(item);
+            var data = _context.Set<T>().Add(item);
+            return data.Entity;
         }
 
         public void Delete(T item)

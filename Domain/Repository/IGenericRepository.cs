@@ -10,7 +10,7 @@ namespace Domain.Repository
     {
         IEnumerable<T> GetAll();
         IEnumerable<T> Get();
-        void Add(T item);
+        T Add(T item);
         void Update(T item);
         void Delete(T item);
     }
