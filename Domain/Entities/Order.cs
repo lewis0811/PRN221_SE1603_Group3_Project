@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities
@@ -10,9 +12,13 @@ namespace Domain.Entities
 
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-
+        [Display(Name = "Order Time")]
         public DateTime OrderTime { get; set; }
-        public bool IsPayed { get; set; }
+        [Display(Name = "Total Price")]
+        public double TotalPrice { get; set; }
+        public bool IsPaid { get; set; }
+        [Display(Name = "Order Status")]
+        public OrderStatus OrderStatus { get; set; }
 
         // Navigation property for the related Customer
         public Customer Customer { get; set; }

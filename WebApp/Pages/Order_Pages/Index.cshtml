@@ -1,0 +1,60 @@
+﻿@page
+@model WebApp.Pages.Order_Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p class="text-end">
+    <a asp-page="/Index" class="btn btn-primary">Return back</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].OrderTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].TotalPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].IsPaid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].OrderStatus)
+            </th>
+            @* <th>
+                @Html.DisplayNameFor(model => model.Order[0].Customer)
+            </th> *@
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Order) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalPrice)
+            </td>
+            <td >
+                    <input checked="@item.IsPaid" class="form-check-input" disabled="disabled" type="checkbox">
+            </td>
+            <td class="text-success">
+                @Html.DisplayFor(modelItem => item.OrderStatus)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.Customer.Address)
+            </td> *@
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

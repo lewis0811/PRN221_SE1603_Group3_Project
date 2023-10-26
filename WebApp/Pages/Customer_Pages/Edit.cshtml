@@ -15,9 +15,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Customer.Id" />
             <div class="form-group">
-                <label asp-for="Customer.ApplicationUserId" class="control-label"></label>
+                <input type="hidden" asp-for="Customer.ApplicationUserId" value="@Model.Customer.ApplicationUserId" />
+@*                 <label asp-for="Customer.ApplicationUserId" class="control-label"></label>
                 <select asp-for="Customer.ApplicationUserId" class="form-control" asp-items="ViewBag.ApplicationUserId"></select>
-                <span asp-validation-for="Customer.ApplicationUserId" class="text-danger"></span>
+                <span asp-validation-for="Customer.ApplicationUserId" class="text-danger"></span> *@
             </div>
             <div class="form-group">
                 <label asp-for="Customer.Name" class="control-label"></label>
@@ -37,7 +38,14 @@
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    @if (User.IsInRole("Customer"))
+    {
+        <a href="./Details?id=@Model.Customer.ApplicationUserId">Back to Profile </a>
+    }else
+    {
+        <a asp-page="./Index">Back to List</a>
+    }
+        
 </div>
 
 @section Scripts {

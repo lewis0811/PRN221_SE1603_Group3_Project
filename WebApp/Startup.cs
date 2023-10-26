@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApp.Configuration;
+using WebApp.Pages.Cart;
 using WebApp.Services;
 
 namespace WebApp
@@ -31,6 +32,7 @@ namespace WebApp
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<CartModel>();
             services.AddTransient<IEmailSender, MailJetEmailSender>();
             services.AddResponseCaching();
             services.AddResponseCompression();

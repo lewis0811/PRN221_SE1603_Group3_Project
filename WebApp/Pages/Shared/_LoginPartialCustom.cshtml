@@ -1,27 +1,65 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Domain.Repository
+@using WebApp.Pages.Cart
 @inject SignInManager<IdentityUser> _signInManager
 @inject UserManager<IdentityUser> _userManager
-<ul class="navbar-nav me-auto text-end">
-    
+@inject IUnitOfWork unitOfWork
+@{
+    CartModel a = new CartModel(unitOfWork);
+    a.OrderDetails = unitOfWork.OrderDetail.Get().AsQueryable()
+    .Where(c => c.Order.Customer.ApplicationUserId == _userManager.GetUserId(User)
+    && c.Order.IsPaid == false
+    )
+    .ToList();
+
+    var b = a.OrderDetails.OrderByDescending(c => c.OrderId).FirstOrDefault();
+    var z = 0;
+    if(b != null)
+    {
+        var c = b.OrderId;
+        var d = unitOfWork.OrderDetail.Get().AsQueryable()
+        .Where(o => o.OrderId == c).ToList();
+        z = d.Count;
+    }
+} 
+
+<ul class="navbar-nav text-end">
 @if (_signInManager.IsSignedIn(User))
-{
-    <li class="nav-item text-end">
-        <a class="nav-link " >Hello @_userManager.GetUserName(User)</a>
-    </li>
-    <li class="nav-item">
-        <form method="post" asp-page="/Account/Logout">
-            <button type="submit" class="btn nav-link">Log out</button>
-        </form>
-    </li>
+    {
 
-}else
-{
-    <li class="nav-item">
-        <a class="nav-link " asp-area="" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link " asp-area="" asp-page="/Account/Login">Login</a>
-    </li>
+        <div class="text-end d-flex">
+            <li class="nav-item">
+                <a class="nav-link " asp-area="" asp-page="/Account/Register">
+                <i class="fa-solid fa-cart-shopping fa-xl" style="position: relative;">
+                    <span class="fs-6" style="color: #ff0000; position: absolute; top: -10px; right: -10px;">@z</span>
+                </i>
+            </a>
+        </li>
+        <li class="nav-item text-end">
+                @if (_userManager.GetRolesAsync(await _userManager.GetUserAsync(User)).Result.First() == "Customer")
+                {
+                <a href="/Customer_Pages/Details?id=@_userManager.GetUserId(User)" class="nav-link ">Hello @_userManager.GetUserName(User) </a>
+                }
+        </li>
+        <li class="nav-item">
+            <form method="post" asp-page="/Account/Logout">
+                <button type="submit" class="btn nav-link">Log out</button>
+            </form>
+        </li>
+    </div>
 
-}
+    }else
+    {
+        <p class="text-end">
+            <li class="nav-item">
+                <a class="nav-link " asp-area="" asp-page="/Account/Register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " asp-area="" asp-page="/Account/Login">Login</a>
+            </li>
+        </p>
+        @await Html.PartialAsync("_LoginPartialCustom",
+    new CartModel(unitOfWork))
+
+    }
 </ul>

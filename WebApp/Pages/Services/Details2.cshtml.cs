@@ -94,7 +94,8 @@ namespace WebApp.Pages.Services
                 Quantity = OrderDetail.Quantity,
             };
 
-            var isPaid = _unitOfWork.Order.Get().AsQueryable().Any(c => c.IsPayed == false);
+            var isPaid = _unitOfWork.Order.Get().AsQueryable().Any(c => c.IsPaid == false
+            && c.CustomerId == orderEntity.CustomerId);
             if (!isPaid)
             {
                 var order = _unitOfWork.Order.Add(_mapper.Map<Order>(orderEntity)); _unitOfWork.Save();
@@ -102,7 +103,7 @@ namespace WebApp.Pages.Services
             }
             else
             {
-                orderDetailEntity.OrderId = _unitOfWork.Order.Get().AsQueryable().FirstOrDefault(c => c.IsPayed == false).Id;
+                orderDetailEntity.OrderId = _unitOfWork.Order.Get().AsQueryable().FirstOrDefault(c => c.IsPaid == false).Id;
             }
 
             var matchStoreService = await _unitOfWork.StoreService.Get().AsQueryable()
@@ -117,7 +118,10 @@ namespace WebApp.Pages.Services
                 orderDetailEntity.StoreServiceId = matchStoreService.Id;
             }
 
-            var existService = await _unitOfWork.OrderDetail.Get().AsQueryable().FirstOrDefaultAsync(c => c.StoreServiceId == matchStoreService.Id);
+            var existService = await _unitOfWork.OrderDetail.Get().AsQueryable()
+                .FirstOrDefaultAsync(c => c.StoreServiceId == matchStoreService.Id
+                && c.OrderId == orderDetailEntity.OrderId);
+
             int tempOrderDetailId = 0;
             int tempOrderId = 0;
             if (existService != null)
@@ -151,8 +155,9 @@ namespace WebApp.Pages.Services
             return new RedirectToPageResult("/Cart/Cart", model);
         }
 
-        public async Task<IActionResult> OnPostShopAsync(IFormCollection data)
+        public async Task<IActionResult> OnPostShopAsync()
         {
+
             return Page();
         }
     }

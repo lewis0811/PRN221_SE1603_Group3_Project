@@ -8,22 +8,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
-using Domain.Repository;
 
-namespace WebApp.Pages.Customer_Pages
+namespace WebApp.Pages.Order_Pages
 {
     public class EditModel : PageModel
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly DataAccess.Context.ApplicationDbContext _context;
 
-        public EditModel(IUnitOfWork unitOfWork)
+        public EditModel(DataAccess.Context.ApplicationDbContext context)
         {
-            _unitOfWork = unitOfWork;
+            _context = context;
         }
 
         [BindProperty]
-        public Customer Customer { get; set; }
-       
+        public Order Order { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -32,14 +30,14 @@ namespace WebApp.Pages.Customer_Pages
                 return NotFound();
             }
 
-            Customer = await _unitOfWork.Customer.Get().AsQueryable()
-                .Include(c => c.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+            Order = await _context.Orders
+                .Include(o => o.Customer).FirstOrDefaultAsync(m => m.Id == id);
 
-            if (Customer == null)
+            if (Order == null)
             {
                 return NotFound();
             }
-           ViewData["ApplicationUserId"] = new SelectList(_unitOfWork.User.Get(), "Id", "Id");
+           ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Address");
             return Page();
         }
 
@@ -52,22 +50,15 @@ namespace WebApp.Pages.Customer_Pages
                 return Page();
             }
 
-            _unitOfWork.Customer.Update(Customer);
+            _context.Attach(Order).State = EntityState.Modified;
 
             try
             {
-                _unitOfWork.Save();
-                if (User.IsInRole("Customer"))
-                {
-                    return RedirectToPage("./Details",  new {id = Customer.ApplicationUserId});
-                } else if(User.IsInRole("Admin"))
-                {
-                    return RedirectToPage("./Index");   
-                }
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(Customer.Id))
+                if (!OrderExists(Order.Id))
                 {
                     return NotFound();
                 }
@@ -80,9 +71,9 @@ namespace WebApp.Pages.Customer_Pages
             return RedirectToPage("./Index");
         }
 
-        private bool CustomerExists(int id)
+        private bool OrderExists(int id)
         {
-            return _unitOfWork.Customer.Get().Any(e => e.Id == id);
+            return _context.Orders.Any(e => e.Id == id);
         }
     }
 }

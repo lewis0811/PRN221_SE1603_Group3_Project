@@ -23,7 +23,7 @@ namespace WebApp.Pages.Customer_Pages
 
         public Customer Customer { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
             if (id == null)
             {
@@ -31,7 +31,7 @@ namespace WebApp.Pages.Customer_Pages
             }
 
             Customer = await _unitOfWork.Customer.Get().AsQueryable()
-                .Include(c => c.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+                .Include(c => c.ApplicationUser).FirstOrDefaultAsync(m => m.Id.ToString() == id || m.ApplicationUserId == id);
 
             if (Customer == null)
             {

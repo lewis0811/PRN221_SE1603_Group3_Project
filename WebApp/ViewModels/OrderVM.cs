@@ -12,6 +12,7 @@ namespace WebApp.ViewModels
         public int CustomerId { get; set; }
 
         public DateTime OrderTime { get; set; }
+        public double? TotalPrice { get; set; } = 0;
 
         public bool IsPayed { get; set; }
 

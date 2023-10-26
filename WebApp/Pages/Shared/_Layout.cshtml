@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Domain.Repository
+@using WebApp.Pages.Cart
+@inject IUnitOfWork unitOfWork
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +12,7 @@
     <link rel="stylesheet" href="~/css/bootstrap.rtl.css"/>
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <script src="https://kit.fontawesome.com/bdbcf2ce1a.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <header>
@@ -40,18 +44,11 @@
                                 <a class="dropdown-item" asp-page="/Store_Pages/Index">Store</a>
                             </div>
                         </div>
-@*                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                        </li> *@
-                        <partial name="_LoginPartialCustom" />
                     </ul>
+
+                        <partial name="_LoginPartialCustom" />
+@*                     @await Html.PartialAsync("_LoginPartialCustom",
+                    new CartModel(unitOfWork)) *@
 
 @*                     <form class="d-flex">
                         <input class="form-control me-sm-2" type="search" placeholder="Search">
@@ -77,6 +74,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)

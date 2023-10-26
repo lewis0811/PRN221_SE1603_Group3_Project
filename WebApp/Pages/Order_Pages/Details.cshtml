@@ -1,0 +1,49 @@
+﻿@page
+@model WebApp.Pages.Order_Pages.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+<div>
+    <h4>Order</h4>
+        <p class="text-end">
+            <a asp-page="./Index" asp-route-id="@Model.Order.Customer.ApplicationUserId" class="btn btn-primary">Back to Order</a>
+        </p>
+
+    <hr />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Service </td>
+                <td>Image</td>
+                <td>LaundryStore</td>
+                <td>Quantity</td>
+                <td>Total Price</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.OrderDetails)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.StoreService.Service.Name</td>
+                    <td>
+                        <img src="@item.StoreService.Service.ImgUrl" style="width: 50px">
+                    </td>
+                    <td>@item.StoreService.LaundryStore.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.TotalPrice</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+@* <div>
+    <a asp-page="./Edit" asp-route-id="@Model.Order.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div> *@

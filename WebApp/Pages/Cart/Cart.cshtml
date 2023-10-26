@@ -3,27 +3,19 @@
 @{
 }
 <form method="post">
-    <table class="table table-bordered">
+    <input type="hidden" asp-for="@Model.Order.Id" />
+    <input type="hidden" asp-for="@Model.Order.Customer.ApplicationUserId" />
+
+    <table class="table table-bordered ">
         <thead>
             <tr>
-                <td>
-                    ID
-                </td>
-                <td>
-                    Service Name
-                </td>
-                <td>
-                    Image
-                </td>
-                <td>
-                    LaundryStore
-                </td>
-                <td>
-                    Quantity
-                </td>
-                <td>
-                    Total Price
-                </td>
+                <td>ID</td>
+                <td>Service </td>
+                <td>Image</td>
+                <td>LaundryStore</td>
+                <td>Quantity</td>
+                <td>Total Price</td>
+                <td>Action</td>
             </tr>
         </thead>
         
@@ -36,14 +28,89 @@
                     <td>
                         <img src="@item.StoreService.Service.ImgUrl" style="width: 50px">
                     </td>
-                    <td>@item.StoreService.LaundryStore.Name</td>
+                    <td>@item.StoreService.LaundryStore.Name </td>
                     <td>@item.Quantity</td>
                     <td>@item.TotalPrice</td>
+                    <td>
+                            <button type="submit" value="Delete" class="btn btn-danger" asp-route-id="@item.Id" asp-page-handler="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z" />
+                                    <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z" />
+                                </svg>
+                            </button>
+                        
+                    </td>
+                        
                 </tr>
             } 
         </tbody>
             
     </table>
 
-    <button class="btn btn-success" type="submit">Đặt hàng</button>
+    <button id="" class="btn btn-success" type="button" data-toggle="modal" data-target="#exampleModal">Đặt hàng</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title " id="exampleModalLabel">Đơn hàng của bạn</h2>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @foreach (var item in Model.OrderDetails)
+                    {
+                        <div class="row m-0">
+                        <div class="col-lg-4 ">
+                            <img src="@item.StoreService.Service.ImgUrl" class="border" width="100%">
+                        </div>
+                        <div class="col-lg-8">
+                            <div class="right-side-pro-detail border p-3 m-0">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h4>@item.StoreService.Service.Name</h4>
+                                    </div>
+                                    <hr />
+                                    <div class="col-lg-12 pt-2">
+                                        <h5>Chi tiết</h5>
+                                        <span>
+                                            @item.StoreService.Service.Description
+                                        </span>
+                                        <hr class="m-0 pt-2 mt-2">
+                                    </div>
+                                    <div class="col-lg-12 pt-2">
+                                        <h5>Cửa hàng</h5>
+                                            <span>
+                                                @item.StoreService.LaundryStore.Name
+                                            </span>
+                                        <hr class="m-0 pt-2 mt-2">
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <h6>Số lượng :</h6>
+                                        <span class="pagination">
+                                                @item.Quantity
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    }
+                    <h3>
+                        <label asp-for="@Model.Order.TotalPrice">Tổng giá tiền: @Model.OrderDetails.Sum(c => c.TotalPrice)$ </label>
+                        <input type="hidden"  asp-for="@Model.Order.TotalPrice" value="@Model.OrderDetails.Sum(c => c.TotalPrice)" />
+
+                    </h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" asp-page-handler="UpdateOrder" class="btn btn-primary" value="Đặt hàng"/>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
