@@ -5,23 +5,34 @@
 @inject UserManager<IdentityUser> _userManager
 @inject IUnitOfWork unitOfWork
 @{
-    CartModel a = new CartModel(unitOfWork);
-    a.OrderDetails = unitOfWork.OrderDetail.Get().AsQueryable()
-    .Where(c => c.Order.Customer.ApplicationUserId == _userManager.GetUserId(User)
-    && c.Order.IsPaid == false
-    )
-    .ToList();
-
-    var b = a.OrderDetails.OrderByDescending(c => c.OrderId).FirstOrDefault();
-    var z = 0;
-    if(b != null)
+    CartModel cart = new CartModel(unitOfWork);
+    var lastestOrderDetail = new Domain.Entities.OrderDetail();
+    if (_signInManager.IsSignedIn(User))
     {
-        var c = b.OrderId;
-        var d = unitOfWork.OrderDetail.Get().AsQueryable()
-        .Where(o => o.OrderId == c).ToList();
-        z = d.Count;
+        cart.OrderDetails = unitOfWork.OrderDetail.Get().AsQueryable()
+    .Where(orderDetail => orderDetail.Order.Customer.ApplicationUserId == _userManager.GetUserId(User)
+                       && !orderDetail.Order.IsPaid)
+    .ToList();
+        lastestOrderDetail = cart.OrderDetails.Count > 0
+        ? cart.OrderDetails.OrderByDescending(orderDetail => orderDetail.OrderId).FirstOrDefault()
+        : lastestOrderDetail;
     }
-} 
+
+
+    var orderDetailCount = 0;
+
+    if (lastestOrderDetail.OrderId != 0)
+    {
+        var latestOrderId = lastestOrderDetail.OrderId;
+        var matchingOrderDetails = unitOfWork.OrderDetail.Get()
+            .Where(orderDetail => orderDetail.OrderId == latestOrderId)
+            .ToList();
+
+        orderDetailCount = matchingOrderDetails.Count;
+    }
+    
+}
+
 
 <ul class="navbar-nav text-end">
 @if (_signInManager.IsSignedIn(User))
@@ -29,17 +40,26 @@
 
         <div class="text-end d-flex">
             <li class="nav-item">
-                <a class="nav-link " asp-area="" asp-page="/Account/Register">
-                <i class="fa-solid fa-cart-shopping fa-xl" style="position: relative;">
-                    <span class="fs-6" style="color: #ff0000; position: absolute; top: -10px; right: -10px;">@z</span>
-                </i>
-            </a>
+            
+                @if(orderDetailCount == 0)
+                {
+                    <a class="nav-link " asp-area="" asp-page="/Index">
+                    <i class="fa-solid fa-cart-shopping fa-xl" style="position: relative;">
+                        <span class="fs-6" style="color: #ff0000; position: absolute; top: -10px; right: -10px;">@orderDetailCount</span>
+                    </i>
+                    </a>
+                } else
+                {
+                <a class="nav-link " asp-area="" asp-page="/Cart/Cart" asp-route-OrderId="@lastestOrderDetail.OrderId">
+                    <i class="fa-solid fa-cart-shopping fa-xl" style="position: relative;">
+                        <span class="fs-6" style="color: #ff0000; position: absolute; top: -10px; right: -10px;">@orderDetailCount</span>
+                    </i>
+                </a>
+                }
+
         </li>
         <li class="nav-item text-end">
-                @if (_userManager.GetRolesAsync(await _userManager.GetUserAsync(User)).Result.First() == "Customer")
-                {
                 <a href="/Customer_Pages/Details?id=@_userManager.GetUserId(User)" class="nav-link ">Hello @_userManager.GetUserName(User) </a>
-                }
         </li>
         <li class="nav-item">
             <form method="post" asp-page="/Account/Logout">
@@ -48,7 +68,7 @@
         </li>
     </div>
 
-    }else
+    }   else
     {
         <p class="text-end">
             <li class="nav-item">
@@ -58,8 +78,8 @@
                 <a class="nav-link " asp-area="" asp-page="/Account/Login">Login</a>
             </li>
         </p>
-        @await Html.PartialAsync("_LoginPartialCustom",
-    new CartModel(unitOfWork))
+@*         @await Html.PartialAsync("_LoginPartialCustom",
+    new CartModel(unitOfWork)) *@
 
     }
 </ul>

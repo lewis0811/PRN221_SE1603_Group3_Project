@@ -1,5 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -15,7 +16,12 @@ namespace WebApp.Pages
 
 
         private readonly ILogger<IndexModel> _logger;
+
         public IList<Service> Service { get; set; }
+        public IList<OrderDetail> OrderDetails{ get; set; }
+        public IList<Order> Orders { get; set; }
+        [BindProperty]
+        public Order Order { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IUnitOfWork unitOfWork)
         {
@@ -27,6 +33,36 @@ namespace WebApp.Pages
         {
             Service = await _unitOfWork.Service.Get().AsQueryable()
                 .ToListAsync();
+
+            OrderDetails = await _unitOfWork.OrderDetail.Get().AsQueryable()
+                .Include(c => c.Order)
+                .Where(c => c.Order.OrderStatus != Domain.Enums.OrderStatus.Washed 
+                || c.Order.OrderStatus != Domain.Enums.OrderStatus.Finished)
+                .ToListAsync();
+
+            Orders = await _unitOfWork.Order.Get().AsQueryable()
+                .Where(c => c.IsPaid == true
+                && c.OrderStatus != Domain.Enums.OrderStatus.Washed
+                || c.OrderStatus == Domain.Enums.OrderStatus.Finished)
+                .ToListAsync();
+        }
+
+        public async Task<IActionResult> OnPostSaveAsync()
+        {
+            Orders = await _unitOfWork.Order.Get().AsQueryable()
+                .Where(c => c.IsPaid == true
+                && c.OrderStatus != Domain.Enums.OrderStatus.Washed
+                || c.OrderStatus == Domain.Enums.OrderStatus.Finished)
+                .ToListAsync();
+            var entity = await _unitOfWork.Order.Get().AsQueryable()
+                .FirstOrDefaultAsync(c => c.Id == Order.Id);
+            if (entity != null)
+            {
+                entity.OrderStatus = Order.OrderStatus;
+                _unitOfWork.Order.Update(entity);
+                _unitOfWork.Save();
+            }
+            return Page();
         }
     }
 }
