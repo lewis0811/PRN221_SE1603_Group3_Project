@@ -47,7 +47,7 @@ namespace WebApp.Pages
                 .ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostSaveAsync()
+        public async Task<IActionResult> OnPostSaveAsync(int Id)
         {
             Orders = await _unitOfWork.Order.Get().AsQueryable()
                 .Where(c => c.IsPaid == true
@@ -55,7 +55,7 @@ namespace WebApp.Pages
                 || c.OrderStatus == Domain.Enums.OrderStatus.Finished)
                 .ToListAsync();
             var entity = await _unitOfWork.Order.Get().AsQueryable()
-                .FirstOrDefaultAsync(c => c.Id == Order.Id);
+                .FirstOrDefaultAsync(c => c.Id == Id);
             if (entity != null)
             {
                 entity.OrderStatus = Order.OrderStatus;

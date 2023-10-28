@@ -11,7 +11,6 @@ namespace Domain.Enums
         Collecting = 0,
         Washing = 1,
         Washed = 2,
-        Delivering = 3,
-        Finished = 4,
+        Finished = 3
     }
 }

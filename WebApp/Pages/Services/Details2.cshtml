@@ -31,9 +31,9 @@
                             <h5>Chọn cửa hàng</h5>
                             <select class="form-control" asp-for="@Model.StoreService.LaundryStoreId">
                                 <option selected disabled>-- Chọn cửa hàng --</option>
-                                @foreach(var item in Model.StoreServices)
+                                @foreach(var item in Model.LaundryStores)
                                 {
-                                    <option value="@item.LaundryStoreId">@item.LaundryStore.Name</option>
+                                    <option value="@item.Id">@item.Name</option>
                                 }
                             </select>
                             <hr class="m-0 pt-2 mt-2">
@@ -44,14 +44,17 @@
                         </div>
                         <div class="col-lg-12 mt-3">
                             <div class="row">
-                                <div class="col-lg-6 pb-2">
+                                @* <div class="col-lg-6 pb-2">
                                     <input type="submit" asp-page-handler="Cart"
                                         class="btn btn-danger w-100" value="Add To Cart">
                                 </div>
                                 <div class="col-lg-6">
                                     <input type="submit" asp-page-handler="Shop" 
                                         class="btn btn-success w-100" value="Shop Now">
-                                </div>
+                                </div> *@
+                                <hr />
+                                    <input type="submit" asp-page-handler="Cart"
+                                           class="btn btn-danger w-100" value="Add To Cart">
                             </div>
                         </div>
 
