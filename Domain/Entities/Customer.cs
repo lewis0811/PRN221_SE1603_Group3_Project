@@ -21,9 +21,9 @@ namespace Domain.Entities
         public string Address { get; set; }
 
         // Navigation property for the related ApplicationUser
-        public ApplicationUser ApplicationUser { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
 
         // Navigation property for a collection of related Orders
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order>? Orders { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace Domain.Repository
         public IStoreServiceRepository StoreService { get; }
         public IOrderDetailRepository OrderDetail { get; }
         public IOrderRepository Order { get; }
-        public ILaundryStoreRepository LandryStore { get; }
 
         public void Save();
     }

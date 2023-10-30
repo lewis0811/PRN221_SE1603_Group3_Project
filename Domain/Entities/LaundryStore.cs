@@ -24,7 +24,7 @@ namespace Domain.Entities
         public int Capacity { get; set; }
 
         public bool Status { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
-        public virtual List<StoreService> Services { get; set; }
+        public ApplicationUser? ApplicationUser { get; set; }
+        public virtual List<StoreService>? Services { get; set; }
     }
 }

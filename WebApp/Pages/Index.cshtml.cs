@@ -36,24 +36,41 @@ namespace WebApp.Pages
 
             OrderDetails = await _unitOfWork.OrderDetail.Get().AsQueryable()
                 .Include(c => c.Order)
-                .Where(c => c.Order.OrderStatus != Domain.Enums.OrderStatus.Washed 
+                .Where(c => c.Order.OrderStatus != Domain.Enums.OrderStatus.Washed
                 || c.Order.OrderStatus != Domain.Enums.OrderStatus.Finished)
                 .ToListAsync();
 
-            Orders = await _unitOfWork.Order.Get().AsQueryable()
+            await ListOrderByRole();
+
+        }
+
+        private async Task ListOrderByRole()
+        {
+            if (User.IsInRole("LaundryStore"))
+            {
+                Orders = await _unitOfWork.Order.Get().AsQueryable()
+                .Where(c => c.IsPaid == true &&
+                c.OrderStatus == Domain.Enums.OrderStatus.Washing)
+                .ToListAsync();
+            }
+            else
+            {
+                Orders = await _unitOfWork.Order.Get().AsQueryable()
                 .Where(c => c.IsPaid == true
                 && c.OrderStatus != Domain.Enums.OrderStatus.Washed
                 || c.OrderStatus == Domain.Enums.OrderStatus.Finished)
                 .ToListAsync();
+            }
         }
 
         public async Task<IActionResult> OnPostSaveAsync(int Id)
         {
             Orders = await _unitOfWork.Order.Get().AsQueryable()
                 .Where(c => c.IsPaid == true
-                && c.OrderStatus != Domain.Enums.OrderStatus.Washed
-                || c.OrderStatus == Domain.Enums.OrderStatus.Finished)
+                && c.OrderStatus == Domain.Enums.OrderStatus.Washing
+                || c.OrderStatus != Domain.Enums.OrderStatus.Finished)
                 .ToListAsync();
+
             var entity = await _unitOfWork.Order.Get().AsQueryable()
                 .FirstOrDefaultAsync(c => c.Id == Id);
             if (entity != null)

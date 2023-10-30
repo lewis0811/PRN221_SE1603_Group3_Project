@@ -82,7 +82,6 @@ namespace WebApp.Pages.Account
                 };
 
                 var result = await _userManager.CreateAsync(user, RegisterViewModel.Password);
-
                 if (result.Succeeded)
                 {
                     if (RegisterViewModel.RoleSelected != null && RegisterViewModel.RoleSelected.Length > 0 && RegisterViewModel.RoleSelected == "Admin")
@@ -113,9 +112,9 @@ namespace WebApp.Pages.Account
                     else if (RegisterViewModel.RoleSelected == "LaundryStore")
                     {
                         await _userManager.AddToRoleAsync(user, "LaundryStore");
-                        _unitOfWork.LandryStore.Add(new LaundryStore()
+                        _unitOfWork.LaundryStore.Add(new LaundryStore()
                         {
-                            ApplicationUserId= user.Id,
+                            ApplicationUserId = user.Id,
                             Name = RegisterViewModel.Name,
                             Address = "No edit yet",
                             Capacity = 5,
@@ -141,8 +140,18 @@ namespace WebApp.Pages.Account
                 },
                 new SelectListItem()
                 {
-                    Value = "User",
-                    Text = "User"
+                    Value = "Customer",
+                    Text = "Customer"
+                },
+                new SelectListItem()
+                {
+                    Value = "LaundryStore",
+                    Text = "LaundryStore"
+                },
+                new SelectListItem()
+                {
+                    Value = "Staff",
+                    Text = "Staff"
                 }
             };
 

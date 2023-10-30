@@ -42,8 +42,6 @@ namespace DataAccess.Implementation
 
         public IStoreServiceRepository StoreService { get; set; }
 
-        public ILaundryStoreRepository LandryStore { get; set; }
-
         public IOrderDetailRepository OrderDetail { get; set; }
 
         public void Dispose()
