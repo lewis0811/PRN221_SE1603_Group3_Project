@@ -11,6 +11,7 @@ namespace WebApp.Pages.Account
     {
         [BindProperty]
         public ForgotPasswordViewModel model { get; set; }
+
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
 
@@ -29,25 +30,27 @@ namespace WebApp.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null) 
+                if (user == null)
                 {
                     return Page();
                 };
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackurl = Url.Page("ResetPassword"
-                    ,"/Account/ResetPassword"
+                    , "/Account/ResetPassword"
                     , new
                     {
                         userId = user.Id,
                         code
-                    });
+                    },
+                    protocol: HttpContext.Request.Scheme);
 
-                //await _emailSender.SendEmailAsync(model.Email
-                //    , "Your reset password link"
-                //    ,"Please reset your password by clicking here: <a href=\"" + callbackurl + "\"> link </a>");
+                await _emailSender.SendEmailAsync(model.Email
+                    , "Your reset password link"
+                    , "Please reset your password by clicking here: \"" + callbackurl + "\" ");
 
-                return LocalRedirect(callbackurl);
+                return RedirectToPage("/Account/ForgotPasswordConfirmation");
             }
+
             return Page();
         }
     }

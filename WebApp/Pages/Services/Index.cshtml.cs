@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages.Services
 {
+    [Authorize(Roles = "Customer")]
     public class IndexModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;

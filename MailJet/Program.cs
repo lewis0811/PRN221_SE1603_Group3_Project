@@ -1,7 +1,6 @@
-﻿using Mailjet.Client;
-using Mailjet.Client.Resources;
-using System;
-using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace Mailjet
@@ -17,33 +16,51 @@ namespace Mailjet
         }
         static async Task RunAsync()
         {
-            MailjetClient client = new MailjetClient("bc27b16a65d9bfb55278b9a3625a1b24", "bfeda7b61ef16640c21f654f85a3f259");
-            MailjetRequest request = new MailjetRequest
+            Console.WriteLine("Hello gmail");
+            string messageTo = "tekato1998@gmail.com";
+            string messageFrom = "tekato2002@gmail.com";
+            string appPassword = "ubnnnxoejohndbgm";
+
+            var email = new MailMessage
             {
-                Resource = Send.Resource,
-            }
-               .Property(Send.FromEmail, "ezlewis01@protonmail.com")
-               .Property(Send.FromName, "Mailjet Pilot")
-               .Property(Send.Subject, "Your email flight plan!")
-               .Property(Send.TextPart, "Dear passenger, welcome to Mailjet! May the delivery force be with you!")
-               .Property(Send.HtmlPart, "<h3>Dear passenger, welcome to <a href=\"https://www.mailjet.com/\">Mailjet</a>!<br />May the delivery force be with you!")
-               .Property(Send.Recipients, new JArray {
-                new JObject {
-                 {"Email", "tekato1998@gmail.com"}
-                 }
-                   });
-            MailjetResponse response = await client.PostAsync(request);
-            if (response.IsSuccessStatusCode)
+                From = new MailAddress(messageFrom),
+                Subject = "Reset password email",
+                Body = "Test email"
+            };
+            email.To.Add(new MailAddress(messageTo));
+
+            try
             {
-                Console.WriteLine(string.Format("Total: {0}, Count: {1}\n", response.GetTotal(), response.GetCount()));
-                Console.WriteLine(response.GetData());
+                using var smtpClient = new SmtpClient();
+                smtpClient.Host = "smtp.gmail.com";
+                smtpClient.Port = 587;
+                smtpClient.Credentials = new NetworkCredential(messageFrom, appPassword);
+                smtpClient.EnableSsl = true;
+                smtpClient.Send(email);
+                smtpClient.Dispose();
+                Console.WriteLine("Email sent!");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine(string.Format("StatusCode: {0}\n", response.StatusCode));
-                Console.WriteLine(string.Format("ErrorInfo: {0}\n", response.GetErrorInfo()));
-                Console.WriteLine(string.Format("ErrorMessage: {0}\n", response.GetErrorMessage()));
+                Console.WriteLine(ex.Message);
             }
+
+            //using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com"))
+            //{
+            //    smtpClient.Port = 587;
+            //    smtpClient.Credentials = new NetworkCredential(messageFrom, appPassword);
+            //    smtpClient.EnableSsl = true;
+
+            //    MailMessage mailMessage = new MailMessage
+            //    {
+            //        From = new MailAddress(messageFrom),
+            //        Subject = "Test Email",
+            //        Body = "This is a test email body."
+            //    };
+            //    mailMessage.To.Add(messageTo);
+
+            //    smtpClient.Send(mailMessage);
+            //}
         }
     }
 }

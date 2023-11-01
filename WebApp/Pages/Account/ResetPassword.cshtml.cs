@@ -19,16 +19,22 @@ namespace WebApp.Pages.Account
             _userManager = userManager;
         }
 
-        public void OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string userId = null)
         {
+            if(code == null || userId == null) 
+            {
+                return RedirectToPage("/Index");
+            }
+            ViewData["UserId"] = userId;
             ViewData["Code"] = code;
+            return Page();
         }
         
         public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByIdAsync(model.UserId);
                 if(user == null)
                 {
                     return Page();
@@ -43,7 +49,13 @@ namespace WebApp.Pages.Account
                 }
                 AddError(result);
             }
-            return Page();
+
+            var route = new
+            {
+                code = ViewData["code"].ToString(),
+                userId = ViewData["UserId"].ToString()
+            };
+            return new RedirectToPageResult("/Account/ResetPassword", route);
         }
 
         private void AddError(IdentityResult result)

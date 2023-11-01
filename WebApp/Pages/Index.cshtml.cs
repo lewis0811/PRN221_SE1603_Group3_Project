@@ -40,6 +40,11 @@ namespace WebApp.Pages
                 || c.Order.OrderStatus != Domain.Enums.OrderStatus.Finished)
                 .ToListAsync();
 
+            Orders = await _unitOfWork.Order.Get().AsQueryable()
+                .ToListAsync();
+
+            Order = new();
+
             await ListOrderByRole();
 
         }

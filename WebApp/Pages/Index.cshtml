@@ -38,7 +38,8 @@
         }
 
     </div>
-} else if (User.IsInRole("Staff"))
+} 
+else if (User.IsInRole("Staff"))
 {
 @*     <p class="text-end">
         <a asp-page="/Index" class="btn btn-primary">Return back</a>
@@ -106,7 +107,7 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            <select class="form-select" asp-for="@Model.Order.OrderStatus" >
+                                            <select class="form-select" asp-for="@Model.Order.OrderStatus"  >
                                                 <option disabled selected>-- Choose Status--</option>
                                                 <option value="1">Delivered to LaundryStore</option>
                                                 <option value="3">Shipped to Customer</option>
@@ -130,7 +131,8 @@
 
 
     </form>
-} else if (User.IsInRole("LaundryStore"))
+} 
+else if (User.IsInRole("LaundryStore"))
 {
     <form method="post">
         <table class="table table-bordered table-primary">
@@ -224,7 +226,8 @@
 
 
     </form>
-} else
+} 
+else
 {
     <nav class="navbar navbar-expand-md navbar-light bg-white">
         <div class="container-fluid p-0">

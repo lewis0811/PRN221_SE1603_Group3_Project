@@ -35,18 +35,26 @@ namespace WebApp.Pages.Services
         public OrderDetail OrderDetail { get; set; }
 
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public Details2Model(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IMapper mapper)
+        public Details2Model(IUnitOfWork unitOfWork, UserManager<IdentityUser> userManager, IMapper mapper, SignInManager<IdentityUser> signInManager)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
             _mapper = mapper;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            // Check Login
+            if (!_signInManager.IsSignedIn(User) &&  !User.IsInRole("Customer"))
+            {
+                return RedirectToPage("/Account/Login");
+            }
+
             Customer = await _unitOfWork.Customer.Get().AsQueryable()
                 .FirstOrDefaultAsync(c => c.ApplicationUserId == _userManager.GetUserId(User));
             if (id == null)
@@ -76,6 +84,8 @@ namespace WebApp.Pages.Services
             LaundryStores = _unitOfWork.LaundryStore
                 .GetAll()
                 .ToList();
+
+            OrderDetail = new();
 
             return Page();
         }
