@@ -45,7 +45,7 @@ else if (User.IsInRole("Staff"))
         <a asp-page="/Index" class="btn btn-primary">Return back</a>
     </p> *@
     <form method="post">
-        <table class="table table-bordered  table-secondary">
+        <table id="myTable" class="table table-bordered  table-secondary">
             <thead>
                 <tr>
                     <th>
@@ -170,7 +170,7 @@ else if (User.IsInRole("LaundryStore"))
         </div>
         <div class ="col-8">
             <form method="post">
-                <table class="table table-bordered table-secondary">
+                <table id="myTable" class="table table-bordered table-secondary">
                     <thead>
                         <tr>
                             <th>
@@ -304,5 +304,10 @@ else
     </div>
 }
 
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable();
+    });
+</script>
 
   

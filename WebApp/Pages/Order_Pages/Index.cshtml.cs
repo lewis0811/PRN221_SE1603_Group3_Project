@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages.Order_Pages
 {
-    [Authorize("Customer,Admin")]
+    [Authorize(Roles ="Customer,Admin")]
     public class IndexModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
