@@ -84,7 +84,7 @@ else if (User.IsInRole("Staff"))
                         </td>
                         <td class="text-center">
                             <!-- Button trigger modal -->
-                            @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished && item.OrderStatus != Domain.Enums.OrderStatus.Washed)
+                            @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished )
                             {
                                @*  <button type="button" class="btn btn-warning" data-id="@item.Id" data-toggle="modal" data-target="#exampleModal@{@item.Id}" >
                                     Update Status

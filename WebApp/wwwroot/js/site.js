@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 $(document).ready(function () {
     $('#example').DataTable({
-        "aLengthMenu": [[5, 50, 15, -1], [5, 10, 15, "All"]],
-            "pageLength": 5
+        "aLengthMenu": [[5, 10, 15, -1], [5, 10, 15, "All"]],
+            "pageLength": 10
     });
 });
