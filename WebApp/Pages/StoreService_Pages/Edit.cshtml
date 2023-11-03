@@ -1,5 +1,5 @@
 ﻿@page
-@model WebApp.Pages.StoreServices.EditModel
+@model WebApp.Pages.StoreService_Pages.EditModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -14,7 +14,9 @@
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="StoreService.Id" />
-            <div class="form-group">
+            <input type="hidden" asp-for="StoreService.ServiceId" value="@Model.StoreService.ServiceId"/>
+            <input type="hidden" asp-for="StoreService.LaundryStoreId" value="@Model.StoreService.LaundryStoreId" />
+@*             <div class="form-group">
                 <label asp-for="StoreService.ServiceId" class="control-label"></label>
                 <select asp-for="StoreService.ServiceId" class="form-control" asp-items="ViewBag.ServiceId"></select>
                 <span asp-validation-for="StoreService.ServiceId" class="text-danger"></span>
@@ -23,7 +25,7 @@
                 <label asp-for="StoreService.LaundryStoreId" class="control-label"></label>
                 <select asp-for="StoreService.LaundryStoreId" class="form-control" asp-items="ViewBag.LaundryStoreId"></select>
                 <span asp-validation-for="StoreService.LaundryStoreId" class="text-danger"></span>
-            </div>
+            </div> *@
             <div class="form-group">
                 <label asp-for="StoreService.Weight" class="control-label"></label>
                 <input asp-for="StoreService.Weight" class="form-control" />
@@ -42,7 +44,7 @@
 </div>
 
 <div>
-    <a asp-page="./Index">Back to List</a>
+    <a asp-page="./Index" asp-route-storeId="@Model.StoreService.LaundryStoreId">Back to List</a>
 </div>
 
 @section Scripts {

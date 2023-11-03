@@ -8,7 +8,7 @@
 <div class="container">
     <div class=" main-section bg-white">
         <input type="hidden" asp-for="@Model.Customer.Id" value="@Model.Customer.Id"/>
-        <input type="hidden" asp-for="@Model.StoreService.ServiceId" value="@Model.Service.Id"/>
+        <input type="hidden" asp-for="@Model.Service.Id" value="@Model.Service.Id"/>
         <div class="row m-0">
             <div class="col-lg-4 ">
                 <img src="@Model.Service.ImgUrl" class="border" width="100%">
@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-lg-12 pt-2">
                             <h5>Chọn cửa hàng</h5>
-                            <select class="form-control" asp-for="@Model.StoreService.LaundryStoreId">
+                            <select class="form-control" asp-for="@Model.LaundryStore.Id">
                                 <option selected disabled>-- Chọn cửa hàng --</option>
                                 @foreach(var item in Model.LaundryStores)
                                 {
@@ -53,9 +53,10 @@
                                         class="btn btn-success w-100" value="Shop Now">
                                 </div> *@
                                 <hr />
-                                    <input type="submit" asp-page-handler="Cart"
+                                    <input type="submit" asp-page-handler="Cart" asp-route-id="@Model.Service.Id"
                                            class="btn btn-danger w-100" value="Add To Cart">
                             </div>
+                                <label class="text-danger">@ViewData["Error"]</label>
                         </div>
 
                     </div>

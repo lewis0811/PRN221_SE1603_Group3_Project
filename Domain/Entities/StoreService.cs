@@ -7,24 +7,24 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
 
-        [ForeignKey("Service")]
+        [ForeignKey(nameof(Service))]
         public int ServiceId { get; set; }
 
-        [ForeignKey("LaundryStore")]
+        [ForeignKey(nameof(LaundryStore))]
         public int LaundryStoreId { get; set; }
 
         
         [Range(1, double.MaxValue, ErrorMessage = "Weight must be greater than 1")]
         public double? Weight { get; set; } = null;
 
-
+        [Required(ErrorMessage = "Unit Price is required")] 
         [Range(1, double.MaxValue, ErrorMessage = "UnitPrice must be greater than 1")]
-        public double? UnitPrice { get; set; } = null;
+        public double? UnitPrice { get; set; }
 
         // Navigation property for the related Service
-        public Service Service { get; set; }
+        public Service? Service { get; set; }
 
         // Navigation property for the related LaundryStore
-        public LaundryStore LaundryStore { get; set; }
+        public LaundryStore? LaundryStore { get; set; }
     }
 }

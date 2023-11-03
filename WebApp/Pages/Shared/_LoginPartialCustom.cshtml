@@ -37,8 +37,7 @@
 @if (_signInManager.IsSignedIn(User))
     {
 
-        <div class="text-end d-flex">
-            <li class="nav-item">
+        <li class="nav-item">
                 @if (User.IsInRole("Customer"))
                 {
                     @if (orderDetailCount == 0)
@@ -58,17 +57,23 @@
                     </a>
                     }
                 }
-
         </li>
         <li class="nav-item text-end">
-            <a href="/Customer_Pages/Details?id=@_userManager.GetUserId(User)" class="nav-link ">Hello @_userManager.GetUserName(User) </a>
+            @if (User.IsInRole("Customer"))
+            {
+                <a href="/Customer_Pages/Details?id=@_userManager.GetUserId(User)" class="nav-link ">Hello @_userManager.GetUserName(User) </a>
+                
+            } 
+            
+            @if (User.IsInRole("LaundryStore")){
+                <a href="/Store_Pages/Details?id=@_userManager.GetUserId(User)" class="nav-link ">Hello @_userManager.GetUserName(User) </a>
+            }
         </li>
-        <li class="nav-item">
-            <form method="post" asp-page="/Account/Logout">
-                <button type="submit" class="btn nav-link">Log out</button>
-            </form>
-        </li>
-        </div>
+            <li class="nav-item">
+                <form method="post" asp-page="/Account/Logout">
+                    <button type="submit" class="btn nav-link">Log out</button>
+                </form>
+            </li>
 
     }   else
     {

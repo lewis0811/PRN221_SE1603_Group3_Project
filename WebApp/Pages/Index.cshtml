@@ -45,7 +45,7 @@ else if (User.IsInRole("Staff"))
         <a asp-page="/Index" class="btn btn-primary">Return back</a>
     </p> *@
     <form method="post">
-        <table class="table table-bordered table-primary">
+        <table class="table table-bordered  table-secondary">
             <thead>
                 <tr>
                     <th>
@@ -69,7 +69,7 @@ else if (User.IsInRole("Staff"))
             <tbody>
                 @foreach (var item in Model.Orders)
                 {
-                    <tr>
+                    <tr class="fw-bolder text-center fs-2">
                         <td>
                             @Html.DisplayFor(modelItem => item.OrderTime)
                         </td>
@@ -79,20 +79,25 @@ else if (User.IsInRole("Staff"))
                         <td>
                             <input checked="@item.IsPaid" class="form-check-input" disabled="disabled" type="checkbox">
                         </td>
-                        <td class="text-success fw-bolder">
+                        <td class="text-success">
                             @Html.DisplayFor(modelItem => item.OrderStatus)
                         </td>
-                        <td>
+                        <td class="text-center">
                             <!-- Button trigger modal -->
-                            @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished)
+                            @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished && item.OrderStatus != Domain.Enums.OrderStatus.Washed)
                             {
-                                <button type="button" class="btn btn-warning" data-id="@item.Id" data-toggle="modal" data-target="#exampleModal@{@item.Id}" >
+                               @*  <button type="button" class="btn btn-warning" data-id="@item.Id" data-toggle="modal" data-target="#exampleModal@{@item.Id}" >
+                                    Update Status
+                                </button> *@
+                                <input  type="hidden" asp-for="@Model.OrderVM.OrderStatus" value="@Model.Order.OrderStatus"/>
+                                <button type="submit" class="btn btn-primary" asp-route-id="@item.Id"  asp-page-handler="Save" >
                                     Update Status
                                 </button>
                             }else {
-                            <button type="button" disabled class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
+                            @* <button type="button" disabled class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
                                 Update Status
-                            </button>
+                            </button> *@
+                                <label class="text-secondary fw-bolder fs-1">DONE</label>
                             }
                             
 
@@ -106,17 +111,17 @@ else if (User.IsInRole("Staff"))
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <div class="modal-body">
+@*                                         <div class="modal-body">
                                             <select class="form-select" asp-for="@Model.Order.OrderStatus"  >
                                                 <option disabled selected>-- Choose Status--</option>
                                                 <option value="1">Delivered to LaundryStore</option>
                                                 <option value="3">Shipped to Customer</option>
 
                                             </select>
-                                        </div>
+                                        </div> *@
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <input type="submit" class="btn btn-primary" asp-route-id="@item.Id"  asp-page-handler="Save" value="Save Change">
+                                            <input type="submit" class="btn btn-primary" asp-route-id="@Model.LaundryStore.Id" asp-page-handler="Save" value="Save Change">
                                         </div>
                                     </div>
                                 </div>
@@ -134,98 +139,135 @@ else if (User.IsInRole("Staff"))
 } 
 else if (User.IsInRole("LaundryStore"))
 {
-    <form method="post">
-        <table class="table table-bordered table-primary">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderDetails[0].Order.OrderTime)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderDetails[0].Order.TotalPrice)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderDetails[0].Order.IsPaid)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OrderDetails[0].Order.OrderStatus)
-                    </th>
-                    @* <th>
-                @Html.DisplayNameFor(model => model.Order[0].Customer)
-                </th> *@
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Orders)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.OrderTime)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalPrice) $
-                        </td>
-                        <td>
-                            <input checked="@item.IsPaid" class="form-check-input" disabled="disabled" type="checkbox">
-                        </td>
-                        <td class="text-success fw-bolder">
-                            @Html.DisplayFor(modelItem => item.OrderStatus)
-                        </td>
-                        <td>
-                            <!-- Button trigger modal -->
-                            @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished)
-                            {
-                                <button type="button" class="btn btn-warning" data-id="@item.Id" data-toggle="modal" data-target="#exampleModal@{
-                                    @item.Id
-                                }">
-                                    Update Status
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="button" disabled class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
-                                    Update Status
-                                </button>
-                            }
+    
+    var availableSlot = Model.LaundryStore.Capacity - Model.Orders
+        .Where(c => c.OrderStatus != Domain.Enums.OrderStatus.Washed
+            && c.OrderStatus != Domain.Enums.OrderStatus.Finished)
+        .ToList()
+        .Count;
+    
+    <div class="row">
+        <div class="col-4">
+            <div class="card card-body fs-4 fw-bolder" data-mh="card-one" style="height: max-content;">
+                <p><span class="text-span">Name :</span> @Model.LaundryStore.Name</p>
+                <p><span class="text-span">Address :</span> @Model.LaundryStore.Address</p>
+                <p>
+                    <span class="text-span">Capacity :</span>
+                    <label class="text-warning">@availableSlot/@Model.LaundryStore.Capacity Machines available</label>
+                </p>
+                <p>
+                    <span class="text-span">Status :</span>
+                    @if (@Model.LaundryStore.Status == true)
+                    {
+                        <label class="text-success">Available</label>
+                    } else
+                    {
+                        <label class="text-danger">Unavailable</label>
+                    }
+                </p>
+                <a class="btn btn-primary" asp-page="/StoreService_Pages/Index" asp-route-storeId="@Model.LaundryStore.Id">Service List</a> 
+            </div>
+        </div>
+        <div class ="col-8">
+            <form method="post">
+                <table class="table table-bordered table-secondary">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderDetails[0].Order.OrderTime)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderDetails[0].Order.TotalPrice)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderDetails[0].Order.IsPaid)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.OrderDetails[0].Order.OrderStatus)
+                            </th>
+                            @* <th>
+                        @Html.DisplayNameFor(model => model.Order[0].Customer)
+                        </th> *@
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Orders)
+                        {
+                         <tr class="fw-bold">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OrderTime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalPrice) $
+                                </td>
+                                <td>
+                                    <input checked="@item.IsPaid" class="form-check-input" disabled="disabled" type="checkbox">
+                                </td>
+                                <td class="text-success fw-bolder">
+                                    @Html.DisplayFor(modelItem => item.OrderStatus)
+                                </td>
+                                <td class="text-center">
+                                    <input type="hidden" asp-for="@Model.Order.OrderStatus" value="2">
+                                    <!-- Button trigger modal -->
+                                    @if (item.OrderStatus != Domain.Enums.OrderStatus.Finished && item.OrderStatus != Domain.Enums.OrderStatus.Washed)
+                                    {
+                                        @* <button type="button" class="btn btn-warning" data-id="@item.Id" data-toggle="modal" data-target="#exampleModal@{
+                                            @item.Id
+                                        }">
+                                            Update Status
+                                        </button> *@
+
+                                        <input type="submit" class="btn btn-primary" asp-route-id="@item.Id" asp-page-handler="Save" value="Finish Washing">
+                                    }
+                                    else
+                                    {
+                                        @* <button type="button" disabled class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
+                                            Update Status
+                                        </button> *@
+                                        <label class="text-secondary fw-bolder fs-1">DONE</label>
+                                    }
 
 
-                            <!-- Modal -->
-                            <div class="modal fade" id="exampleModal@{
-                        @item.Id
-}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" style="margin-top: 12.75rem" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Status</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <select class="form-select" asp-for="@Model.Order.OrderStatus">
-                                                <option disabled selected>-- Choose Status--</option>
-                                                <option value="2">Washed Order</option>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="exampleModal@{
+                                                                    @item.Id
+                                        }" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" style="margin-top: 12.75rem" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Status</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <select class="form-select" asp-for="@Model.Order.OrderStatus">
+                                                        <option disabled selected>-- Choose Status--</option>
+                                                        <option value="2">Washed Order</option>
 
-                                            </select>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <input type="submit" class="btn btn-primary" asp-route-id="@item.Id" asp-page-handler="Save" value="Save Change">
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <input type="submit" class="btn btn-primary" asp-route-id="@item.Id" asp-page-handler="Save" value="Save Change">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                        </td>
+                                </td>
 
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
 
-    </form>
+            </form>
+        </div>
+    </div>
+
 } 
 else
 {

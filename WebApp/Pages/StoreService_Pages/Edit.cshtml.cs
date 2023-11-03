@@ -24,7 +24,7 @@ namespace WebApp.Pages.StoreService_Pages
         [BindProperty]
         public StoreService StoreService { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
             if (id == null)
             {
@@ -33,13 +33,13 @@ namespace WebApp.Pages.StoreService_Pages
 
             StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
                 .Include(s => s.LaundryStore)
-                .Include(s => s.Service).FirstOrDefaultAsync(m => m.Id == id);
+                .Include(s => s.Service).FirstOrDefaultAsync(m => m.Id.ToString() == id);
 
             if (StoreService == null)
             {
                 return NotFound();
             }
-           ViewData["LaundryStoreId"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Address");
+           ViewData["LaundryStoreId"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Name");
            ViewData["ServiceId"] = new SelectList(_unitOfWork.Service.Get(), "Id", "Name");
             return Page();
         }
@@ -71,7 +71,7 @@ namespace WebApp.Pages.StoreService_Pages
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index/", routeValues: new {storeId = StoreService.LaundryStoreId });
         }
 
         private bool StoreServiceExists(int id)

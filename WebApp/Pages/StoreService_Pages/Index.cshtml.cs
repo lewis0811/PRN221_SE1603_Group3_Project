@@ -22,11 +22,14 @@ namespace WebApp.Pages.StoreService_Pages
 
         public IList<StoreService> StoreService { get;set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(string storeId = null )
         {
+            ViewData["id"] = storeId;
             StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
                 .Include(s => s.LaundryStore)
-                .Include(s => s.Service).ToListAsync();
+                .Include(s => s.Service)
+                .Where(c => c.LaundryStoreId.ToString() == storeId)
+                .ToListAsync();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace WebApp.Pages.Store_Pages
 
         public LaundryStore LaundryStore { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(string? id)
         {
             if (id == null)
             {
@@ -30,7 +30,7 @@ namespace WebApp.Pages.Store_Pages
             }
 
             LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
-                .Include(l => l.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
+                .Include(l => l.ApplicationUser).FirstOrDefaultAsync(m => m.Id.ToString() == id || m.ApplicationUserId == id);
 
             if (LaundryStore == null)
             {

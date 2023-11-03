@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System;
+using Domain.Enums;
 
 namespace WebApp.ViewModels
 {
@@ -10,11 +11,13 @@ namespace WebApp.ViewModels
 
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-
+        [Display(Name = "Order Time")]
         public DateTime OrderTime { get; set; }
-        public double? TotalPrice { get; set; } = 0;
-
-        public bool IsPayed { get; set; }
+        [Display(Name = "Total Price")]
+        public double TotalPrice { get; set; }
+        public bool IsPaid { get; set; }
+        [Display(Name = "Order Status")]
+        public OrderStatus OrderStatus { get; set; }
 
     }
 }

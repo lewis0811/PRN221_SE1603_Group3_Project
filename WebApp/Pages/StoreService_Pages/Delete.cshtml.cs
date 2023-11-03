@@ -42,22 +42,24 @@ namespace WebApp.Pages.StoreService_Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(string? id)
         {
+            var storeId = 0;
             if (id == null)
             {
                 return NotFound();
             }
 
-            StoreService = _unitOfWork.StoreService.Get().FirstOrDefault(s => s.Id == id);
-
+            StoreService = await _unitOfWork.StoreService.Get().AsQueryable().FirstOrDefaultAsync(s => s.Id.ToString() == id);
+            
             if (StoreService != null)
             {
+                 storeId = StoreService.LaundryStoreId;
                 _unitOfWork.StoreService.Delete(StoreService);
                 _unitOfWork.Save();
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index/", routeValues: new { storeId });
         }
     }
 }

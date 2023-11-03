@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Domain.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,6 +18,8 @@ namespace WebApp.Pages.Services
     public class Details2Model : PageModel
     {
         [BindProperty]
+        public LaundryStore LaundryStore { get; set; }
+        [BindProperty]
         public Customer Customer { get; set; }
 
         [BindProperty]
@@ -27,6 +30,10 @@ namespace WebApp.Pages.Services
 
         [BindProperty]
         public StoreService StoreService { get; set; }
+        [BindProperty]
+        public List<Order> Orders { get; set; }
+        [BindProperty]
+        public List<OrderDetail> OrderDetails { get; set; }
 
         [BindProperty]
         public List<StoreService> StoreServices { get; set; }
@@ -85,24 +92,116 @@ namespace WebApp.Pages.Services
                 .GetAll()
                 .ToList();
 
+            var filterServiceByStore = new List<LaundryStore>();
+            foreach (var store in StoreServices)
+            {
+                filterServiceByStore.Add(store.LaundryStore);
+            }
+            filterServiceByStore = LaundryStores.Except(filterServiceByStore).ToList();
+
+            LaundryStores = LaundryStores.Except(filterServiceByStore).ToList();
             OrderDetail = new();
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostCartAsync(IFormCollection data)
+        public async Task<IActionResult> OnPostCartAsync(int? id)
         {
             var orderEntity = new OrderVM()
             {
                 CustomerId = Customer.Id,
                 OrderTime = DateTime.UtcNow,
-                IsPayed = false,
+                IsPaid = false,
             };
 
             var orderDetailEntity = new OrderDetailVM()
             {
                 Quantity = OrderDetail.Quantity,
             };
+            var catchId = LaundryStore.Id;
+            var serviceId = id;
+            // ###################################
+            var storeBeingCheck = await _unitOfWork.LaundryStore.Get().AsQueryable()
+                .Where(c => c.Id == catchId)
+                .FirstOrDefaultAsync();
+            StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .Include (c => c.LaundryStore).FirstOrDefaultAsync();
+            StoreServices = _unitOfWork.StoreService
+                .Get().AsQueryable()
+                .Include(c => c.LaundryStore)
+                .Where(c => c.ServiceId == id)
+                .ToList();
+
+
+            OrderDetails = await _unitOfWork.OrderDetail.Get().AsQueryable()
+                .Include(c => c.Order)
+                .Include(c => c.StoreService)
+                .ThenInclude(c => c.LaundryStore)
+                .Where(c => c.StoreService.LaundryStore.Id == LaundryStore.Id
+                    && c.Order.OrderStatus != Domain.Enums.OrderStatus.Collecting
+                    && c.Order.OrderStatus != Domain.Enums.OrderStatus.Finished)
+                .ToListAsync();
+
+            Orders = new List<Order>();
+            foreach (var item in OrderDetails)
+            {
+                Orders.Add(item.Order);
+            }
+
+            Orders = Orders
+                .Where(c => c.OrderStatus != OrderStatus.Collecting
+                && c.OrderStatus != OrderStatus.Finished)
+                .GroupBy(c => c.Id)
+                .Select(a => a.FirstOrDefault())
+                .ToList();
+
+            var checkWorking = Orders.Where(c => c.OrderStatus == OrderStatus.Washing).ToList();
+            if (storeBeingCheck.Capacity <= checkWorking.Count)
+            {
+                //
+                Customer = await _unitOfWork.Customer.Get().AsQueryable()
+               .FirstOrDefaultAsync(c => c.ApplicationUserId == _userManager.GetUserId(User));
+                if (id == null)
+                {
+                    return NotFound();
+                }
+
+                Service = await _unitOfWork.Service.Get().AsQueryable()
+                    .OrderBy(c => c.Name)
+                    .FirstOrDefaultAsync(m => m.Id == id);
+
+                if (Service == null)
+                {
+                    return NotFound();
+                }
+
+                StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
+                    .Where(c => c.ServiceId == id)
+                    .FirstOrDefaultAsync();
+
+                StoreServices = _unitOfWork.StoreService
+                    .Get().AsQueryable()
+                    .Include(c => c.LaundryStore)
+                    .Where(c => c.ServiceId == id)
+                    .ToList();
+
+                LaundryStores = _unitOfWork.LaundryStore
+                    .GetAll()
+                    .ToList();
+
+                var filterServiceByStore = new List<LaundryStore>();
+                foreach (var store in StoreServices)
+                {
+                    filterServiceByStore.Add(store.LaundryStore);
+                }
+                filterServiceByStore = LaundryStores.Except(filterServiceByStore).ToList();
+
+                LaundryStores = LaundryStores.Except(filterServiceByStore).ToList();
+                OrderDetail = new();
+                ViewData["Error"] = $"{StoreService.LaundryStore.Name} is out of machine slot right now, please choose another store or try again later.";
+                return Page();
+            }
+            ////////////////////////////////////////////////////////////////////////////////
 
             var isPaid = _unitOfWork.Order.Get().AsQueryable().Any(c => c.IsPaid == false
             && c.CustomerId == orderEntity.CustomerId);
@@ -117,8 +216,8 @@ namespace WebApp.Pages.Services
             }
 
             var matchStoreService = await _unitOfWork.StoreService.Get().AsQueryable()
-                .FirstOrDefaultAsync(c => c.LaundryStoreId == StoreService.LaundryStoreId
-                && c.ServiceId == StoreService.ServiceId);
+                .FirstOrDefaultAsync(c => c.LaundryStoreId == LaundryStore.Id
+                && c.ServiceId == Service.Id);
             if (matchStoreService != null)
             {
                 orderDetailEntity.TotalPrice = matchStoreService.UnitPrice
@@ -148,7 +247,8 @@ namespace WebApp.Pages.Services
             }
             else
             {
-                var orderDetail = _unitOfWork.OrderDetail.Add(_mapper.Map<OrderDetail>(orderDetailEntity)); _unitOfWork.Save();
+                var orderDetail = _unitOfWork.OrderDetail.Add(_mapper.Map<OrderDetail>(orderDetailEntity)); 
+                _unitOfWork.Save();
                 tempOrderDetailId = orderDetail.Id;
                 tempOrderId = orderDetail.OrderId;
             }
