@@ -23,12 +23,22 @@ namespace WebApp.Pages.Order_Pages
 
         public IList<Order> Order { get;set; }
 
-        public async Task OnGetAsync(string id)
+        public async Task OnGetAsync(string id = null)
         {
-            Order = await _context.Orders
-                .Include(o => o.Customer)
-                .Where(c => c.Customer.ApplicationUserId ==  id && c.IsPaid == true)
-                .ToListAsync();
+
+            if (Order != null)
+            {
+                Order = await _context.Orders
+                    .Include(o => o.Customer)
+                    .Where(c => c.Customer.ApplicationUserId == id && c.IsPaid == true)
+                    .ToListAsync();
+            }
+            else
+            {
+                Order = await _context.Orders
+               .Include(o => o.Customer)
+               .ToListAsync();
+            }
         }
     }
 }

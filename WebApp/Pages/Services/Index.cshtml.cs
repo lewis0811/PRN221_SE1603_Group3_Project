@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages.Services
 {
-    [Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer,Admin")]
     public class IndexModel : PageModel
     {
         private readonly IUnitOfWork _unitOfWork;
