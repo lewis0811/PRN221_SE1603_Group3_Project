@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages.Order_Pages
 {
+    [Authorize("Customer,Admin")]
     public class IndexModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;

@@ -89,7 +89,7 @@ namespace WebApp.Pages
                 {
                      LaundryStore.Status = true;
                 }
-                _unitOfWork.LaundryStore.Update(LaundryStore);
+                //_unitOfWork.LaundryStore.Update(LaundryStore);
                 //_unitOfWork.Save();
             }
             else if(User.IsInRole("Staff"))
