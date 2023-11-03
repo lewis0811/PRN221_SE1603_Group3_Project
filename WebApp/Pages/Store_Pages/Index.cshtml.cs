@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
 using Domain.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Pages.Store_Pages
 {
+    [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly DataAccess.Context.ApplicationDbContext _context;
