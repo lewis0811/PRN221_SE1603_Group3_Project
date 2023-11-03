@@ -118,8 +118,16 @@ namespace WebApp.Pages
                 .FirstOrDefaultAsync(c => c.Id == id);
             if (entity != null)
             {
+                switch (entity.OrderStatus)
+                {
+                    case OrderStatus.Collecting:
+                        entity.OrderStatus = OrderStatus.Washing; break;
+                    case OrderStatus.Washing:
+                        entity.OrderStatus = OrderStatus.Washed; break;
+                    case OrderStatus.Washed:
+                        entity.OrderStatus = OrderStatus.Finished; break;
+                }
 
-                entity.OrderStatus = Order.OrderStatus;
                 _unitOfWork.Order.Update(entity);
                 _unitOfWork.Save();
             }
