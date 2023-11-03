@@ -12,7 +12,12 @@
     @* <link rel="stylesheet" href="~/css/bootstrap.rtl.css"/> *@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"/>
+    @* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" /> *@
     <script src="https://kit.fontawesome.com/bdbcf2ce1a.js" crossorigin="anonymous"></script>
+    <script defer src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </head>
 <body>
     <header>
@@ -31,19 +36,24 @@
                             </a>
                         </li>
                         
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Management
+                                </a>
 
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Management
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" asp-page="/Customer_Pages/Index">Customer</a>
-                                <a class="dropdown-item" asp-page="/Staff_Pages/Index">Staff</a>
-                                <a class="dropdown-item" asp-page="/Services/Index">Services</a>
-                                <a class="dropdown-item" asp-page="/StoreService_Pages/Index">Store Services</a>
-                                <a class="dropdown-item" asp-page="/Store_Pages/Index">Store</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" asp-page="/Customer_Pages/Index">Customer</a>
+                                    <a class="dropdown-item" asp-page="/Staff_Pages/Index">Staff</a>
+                                    <a class="dropdown-item" asp-page="/Services/Index">Services</a>
+                                    <a class="dropdown-item" asp-page="/StoreService_Pages/Index">Store Services</a>
+                                    <a class="dropdown-item" asp-page="/Store_Pages/Index">Store</a>
+                                </div>
                             </div>
-                        </div>
+                        }
+
+
                     </ul>
 
                         <partial name="_LoginPartialCustom" />
@@ -76,6 +86,9 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        new DataTable('#example');
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -364,3 +364,4 @@ FodyWeavers.xsd
 .idea
 WebApp/appsettings.json
 *.json
+MailJet/Program.cs

@@ -12,7 +12,7 @@
 </p>
 @if (User.IsInRole("Customer"))
 {
-    <table class="table">
+    <table id="example" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>
@@ -30,7 +30,7 @@
                 @* <th>
             @Html.DisplayNameFor(model => model.Order[0].Customer)
             </th> *@
-                @* <th></th> *@
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -63,7 +63,7 @@
     </table>
 } else
 {
-    <table class="table">
+    <table id="example" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>

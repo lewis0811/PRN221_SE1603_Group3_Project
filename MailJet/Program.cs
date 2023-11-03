@@ -19,7 +19,7 @@ namespace Mailjet
             Console.WriteLine("Hello gmail");
             string messageTo = "tekato1998@gmail.com";
             string messageFrom = "tekato2002@gmail.com";
-            string appPassword = "ubnnnxoejohndbgm";
+            //string appPassword = "ubnnnxoejohndbgm";
 
             var email = new MailMessage
             {
