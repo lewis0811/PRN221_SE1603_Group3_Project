@@ -8,15 +8,22 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using DataAccess.Context;
 using Domain.Entities;
 using Domain.Repository;
+using Microsoft.AspNetCore.Identity;
+using WebApp.ViewModels;
 
 namespace WebApp.Pages.Store_Pages
 {
     public class CreateModel : PageModel
     {
+        [BindProperty]
+        public RegisterViewModel RegisterViewModel { get; set; }
+
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateModel(IUnitOfWork unitOfWork)
+        public CreateModel(UserManager<IdentityUser> userManager, IUnitOfWork unitOfWork)
         {
+            _userManager = userManager;
             _unitOfWork = unitOfWork;
         }
 
@@ -37,10 +44,42 @@ namespace WebApp.Pages.Store_Pages
                 return Page();
             }
 
-            _unitOfWork.LaundryStore.Add(LaundryStore);
-            _unitOfWork.Save();
+            var user = new ApplicationUser
+            {
+                UserName = RegisterViewModel.Email,
+                Email = RegisterViewModel.Email,
+                Name = RegisterViewModel.Name
+            };
+
+            var result = await _userManager.CreateAsync(user, RegisterViewModel.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "LaundryStore");
+                _unitOfWork.LaundryStore.Add(new LaundryStore()
+                {
+                    ApplicationUserId = user.Id,
+                    Name = RegisterViewModel.Name,
+                    Address = LaundryStore.Address,
+                    Capacity = LaundryStore.Capacity,
+                    Status = LaundryStore.Status,
+                });
+                _unitOfWork.Save();
+                return RedirectToPage("./Index");
+            }
+            else
+            {
+                AddErrors(result);
+            }
 
             return RedirectToPage("./Index");
+        }
+
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
         }
     }
 }

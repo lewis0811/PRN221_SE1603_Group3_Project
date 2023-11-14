@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using WebApp.ViewModels;
 
@@ -35,6 +37,7 @@ namespace WebApp.Pages.Account
                     return Page();
                 };
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
                 var callbackurl = Url.Page("ResetPassword"
                     , "/Account/ResetPassword"
                     , new
@@ -46,7 +49,7 @@ namespace WebApp.Pages.Account
 
                 await _emailSender.SendEmailAsync(model.Email
                     , "Your reset password link"
-                    , "Please reset your password by clicking here: \"" + callbackurl + "\" ");
+                    , $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackurl)}'>clicking here</a>.");
 
                 return RedirectToPage("/Account/ForgotPasswordConfirmation");
             }

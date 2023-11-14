@@ -26,6 +26,8 @@ namespace WebApp.Services
                 From = new MailAddress(_mailSettings.Mail),
                 Subject = subject,
                 Body = htmlMessage,
+                IsBodyHtml = true,
+                
             };
             emailToSend.To.Add(new MailAddress(email));
 

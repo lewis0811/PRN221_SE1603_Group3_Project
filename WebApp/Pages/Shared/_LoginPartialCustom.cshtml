@@ -1,11 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Domain.Repository
+@using Microsoft.AspNetCore.Identity.UI.Services;
 @using WebApp.Pages.Cart
 @inject SignInManager<IdentityUser> _signInManager
 @inject UserManager<IdentityUser> _userManager
 @inject IUnitOfWork unitOfWork
+@inject IEmailSender emailSender
 @{
-    CartModel cart = new CartModel(unitOfWork);
+    CartModel cart = new CartModel(unitOfWork, emailSender, _userManager);
     var lastestOrderDetail = new Domain.Entities.OrderDetail();
     if (_signInManager.IsSignedIn(User))
     {

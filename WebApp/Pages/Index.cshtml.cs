@@ -78,6 +78,7 @@ namespace WebApp.Pages
                     && c.OrderStatus != OrderStatus.Finished)
                     .GroupBy(c => c.Id)
                     .Select(a => a.FirstOrDefault())
+                    .OrderByDescending(c => c.OrderStatus == OrderStatus.Washing)
                     .ToList();
 
                 var checkWorking = Orders.Where(c => c.OrderStatus == OrderStatus.Washing).ToList();

@@ -8,17 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Domain.Repository;
 
 namespace WebApp.Pages.Order_Pages
 {
     [Authorize(Roles ="Customer,Admin")]
     public class IndexModel : PageModel
     {
-        private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public IndexModel(DataAccess.Context.ApplicationDbContext context)
+        public IndexModel(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public IList<Order> Order { get;set; }
@@ -26,16 +27,16 @@ namespace WebApp.Pages.Order_Pages
         public async Task OnGetAsync(string id = null)
         {
 
-            if (Order != null)
+            if (id != null)
             {
-                Order = await _context.Orders
+                Order = await _unitOfWork.Order.Get().AsQueryable()
                     .Include(o => o.Customer)
                     .Where(c => c.Customer.ApplicationUserId == id && c.IsPaid == true)
                     .ToListAsync();
             }
             else
             {
-                Order = await _context.Orders
+                Order = await _unitOfWork.Order.Get().AsQueryable()
                .Include(o => o.Customer)
                .ToListAsync();
             }

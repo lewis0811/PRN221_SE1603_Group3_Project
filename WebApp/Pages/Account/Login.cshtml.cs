@@ -18,9 +18,14 @@ namespace WebApp.Pages.Account
             _signInManager = signInManager;
         }
 
-        public void OnGet(string? returnUrl = null)
+        public IActionResult OnGet(string? returnUrl = null)
         {
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToPage("/Index");
+            }
             ViewData["ReturnURL"] = returnUrl;
+            return Page();
         }
 
         public async Task<IActionResult> OnPost(string? returnUrl = null)

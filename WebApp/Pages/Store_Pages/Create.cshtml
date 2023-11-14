@@ -13,14 +13,29 @@
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="RegisterViewModel.RoleSelected" value="Staff" />
+            <input asp-for=" LaundryStore.Status" type="hidden" class="form-control" value="true" />
+            <input asp-for=" LaundryStore.Name" type="hidden" class="form-control" value="1" />
+
             <div class="form-group">
-                <label asp-for="LaundryStore.ApplicationUserId" class="control-label"></label>
-                <select asp-for="LaundryStore.ApplicationUserId" class ="form-control" asp-items="ViewBag.ApplicationUserId"></select>
+            <label asp-for="RegisterViewModel.Email" class="control-label"></label>
+            <input asp-for="RegisterViewModel.Email" class="form-control" />
             </div>
+
             <div class="form-group">
-                <label asp-for="LaundryStore.Name" class="control-label"></label>
-                <input asp-for="LaundryStore.Name" class="form-control" />
-                <span asp-validation-for="LaundryStore.Name" class="text-danger"></span>
+                <label asp-for="RegisterViewModel.Name" class="control-label"></label>
+                <input asp-for="RegisterViewModel.Name" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RegisterViewModel.Password" class="control-label"></label>
+                <input asp-for="RegisterViewModel.Password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RegisterViewModel.ConfirmPassword" class="control-label"></label>
+                <input asp-for="RegisterViewModel.ConfirmPassword" class="form-control" />
+                @* <span asp-validation-for="ConfirmPassword"></span> *@
             </div>
             <div class="form-group">
                 <label asp-for="LaundryStore.Address" class="control-label"></label>
@@ -31,11 +46,6 @@
                 <label asp-for="LaundryStore.Capacity" class="control-label"></label>
                 <input asp-for="LaundryStore.Capacity" class="form-control" />
                 <span asp-validation-for="LaundryStore.Capacity" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="LaundryStore.Status" /> @Html.DisplayNameFor(model => model.LaundryStore.Status)
-                </label>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

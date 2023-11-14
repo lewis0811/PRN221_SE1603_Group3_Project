@@ -8,17 +8,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DataAccess.Context;
 using Domain.Entities;
+using Domain.Repository;
 
 namespace WebApp.Pages.Staff_Pages
 {
     public class EditModel : PageModel
     {
-        private readonly DataAccess.Context.ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public EditModel(DataAccess.Context.ApplicationDbContext context)
+        public EditModel(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
+
 
         [BindProperty]
         public Staff Staff { get; set; }
@@ -30,14 +32,14 @@ namespace WebApp.Pages.Staff_Pages
                 return NotFound();
             }
 
-            Staff = await _context.Staffs
+            Staff = await _unitOfWork.Staff.Get().AsQueryable()
                 .Include(s => s.ApplicationUser).FirstOrDefaultAsync(m => m.Id == id);
 
             if (Staff == null)
             {
                 return NotFound();
             }
-           ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
+           //ViewData["ApplicationUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
             return Page();
         }
 
@@ -50,30 +52,11 @@ namespace WebApp.Pages.Staff_Pages
                 return Page();
             }
 
-            _context.Attach(Staff).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StaffExists(Staff.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            _unitOfWork.Staff.Update(Staff);
+            _unitOfWork.Save();
             return RedirectToPage("./Index");
         }
 
-        private bool StaffExists(int id)
-        {
-            return _context.Staffs.Any(e => e.Id == id);
-        }
+
     }
 }
