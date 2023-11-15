@@ -16,7 +16,7 @@ namespace WebApp.Pages.StoreService_Pages
 {
     public class CreateModel : PageModel
     {
-
+        
         public LaundryStore LaundryStore { get; set; }
         private readonly IUnitOfWork _unitOfWork;
 
@@ -40,9 +40,14 @@ namespace WebApp.Pages.StoreService_Pages
         public StoreService StoreService { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
-        public async Task<IActionResult> OnPostAsync(string id = null)
+        public async Task<IActionResult> OnPostAsync(string id = null, string? laundrystoreId = null)
         {
-            var storeId = id;
+            var storeId = StoreService.LaundryStoreId;
+            if (laundrystoreId != null)
+            {
+
+            storeId = int.Parse(laundrystoreId);
+            }
             if (!ModelState.IsValid)
             {
                 ViewData["LaundryStoreName"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Name");
@@ -52,13 +57,35 @@ namespace WebApp.Pages.StoreService_Pages
                 
                 return Page();
             }
-            var newStoreService = new StoreService();
-            newStoreService = StoreService;
-            newStoreService.LaundryStoreId = int.Parse(id);
+            var checkExistService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .Where(c => c.LaundryStoreId == StoreService.LaundryStoreId&& c.ServiceId == StoreService.ServiceId)
+                .FirstOrDefaultAsync();
+            if(laundrystoreId != null)
+            {
+                checkExistService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .Where(c => c.LaundryStoreId.ToString() == laundrystoreId && c.ServiceId == StoreService.ServiceId)
+                .FirstOrDefaultAsync();
+            }
+            
+            if(checkExistService != null)
+            {
+
+                ViewData["Error"] = "Service already exist!";
+                ViewData["LaundryStoreName"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Name");
+                ViewData["ServiceId"] = new SelectList(_unitOfWork.Service.Get(), "Id", "Name");
+                LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
+                    .FirstOrDefaultAsync(c => c.Id.ToString() == id);
+                return Page();
+            }
+
             //StoreService = _unitOfWork.StoreService.Get().AsQueryable().Include(c => c.LaundryStore)
             //    .FirstOrDefault(c => c.Id == StoreService.LaundryStoreId);
+            if(laundrystoreId != null)
+            {
+            StoreService.LaundryStoreId = int.Parse(laundrystoreId);
 
-            _unitOfWork.StoreService.Add(newStoreService);
+            }
+            _unitOfWork.StoreService.Add(StoreService);
             _unitOfWork.Save();
 
             return RedirectToPage("/StoreService_Pages/Index", routeValues: new { storeId });

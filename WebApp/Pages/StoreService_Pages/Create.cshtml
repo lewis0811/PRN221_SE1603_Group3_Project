@@ -31,10 +31,10 @@
             } *@
             @if (User.IsInRole("LaundryStore"))
             {
-                    <input type="hidden" disabled asp-for="StoreService.LaundryStoreId" class="form-control" value="@Model.StoreService.LaundryStoreId">
-@*                             <div class="form-group">
+                    <input type="hidden"  name="laundrystoreId" class="form-control" value="@Model.StoreService.LaundryStoreId">
+                    
+@*                             <div class="form-group" >
                 <label asp-for="StoreService.LaundryStoreId" class="control-label">Laundry Store</label>
-
             </div> *@
             } else
             {
@@ -55,6 +55,7 @@
                 <input asp-for="StoreService.UnitPrice" class="form-control" />
                 <span asp-validation-for="StoreService.UnitPrice" class="text-danger"></span>
             </div>
+            <span class="text-danger">@ViewBag.Error</span>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
