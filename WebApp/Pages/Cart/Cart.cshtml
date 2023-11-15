@@ -47,9 +47,18 @@
             
     </table>
 
+    @if(Model.OrderDetails.Count <= 0)
+    {
+        <div class="text-end">
+            <button id="" class="btn btn-primary" disabled type="button" data-toggle="modal" data-target="#exampleModal">Đặt hàng</button>
+        </div>
+    } else
+    {
     <div class="text-end">
         <button id="" class="btn btn-primary" type="button" data-toggle="modal" data-target="#exampleModal">Đặt hàng</button>
     </div>
+        
+    }
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -110,6 +119,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
                     <input type="submit" asp-page-handler="UpdateOrder" class="btn btn-primary" value="Đặt hàng"/>
                 </div>
             </div>

@@ -14,7 +14,7 @@ namespace Domain.Entities
         [ForeignKey(nameof(StoreService))]
         public int StoreServiceId { get; set; }
 
-        [Range(1, 10, ErrorMessage = "Quantity must be at least 1")]
+        [Range(1, 5, ErrorMessage = "Quantity must be at least 1 and max is 5")]
         public short Quantity { get; set; }
 
         [Required(ErrorMessage = "TotalPrice is required")]

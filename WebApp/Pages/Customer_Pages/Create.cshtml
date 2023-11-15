@@ -22,34 +22,26 @@
             <input asp-for="Customer.Name" type="hidden" class="form-control" value="Customer" />
             <div class="form-group">
                 <label asp-for="RegisterViewModel.Email" class="control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RegisterViewModel.Email" class="form-control" />
-                    @* <span asp-validation-for="Email"></span> *@
-                </div>
+                <input asp-for="RegisterViewModel.Email" class="form-control" />
+                <span asp-validation-for="RegisterViewModel.Email" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="RegisterViewModel.Name" class="control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RegisterViewModel.Name" class="form-control" />
-                    @* <span asp-validation-for="Name"></span> *@
-                </div>
+                <input asp-for="RegisterViewModel.Name" class="form-control" />
+                <span asp-validation-for="RegisterViewModel.Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="RegisterViewModel.Password" class="control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RegisterViewModel.Password" class="form-control" />
-                    @* <span asp-validation-for="Password"></span> *@
-                </div>
+                <input asp-for="RegisterViewModel.Password" class="form-control" />
+                <span asp-validation-for="RegisterViewModel.Password" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="RegisterViewModel.ConfirmPassword" class="control-label"></label>
-                <div class="col-md-10">
-                    <input asp-for="RegisterViewModel.ConfirmPassword" class="form-control" />
-                    @* <span asp-validation-for="ConfirmPassword"></span> *@
-                </div>
+                <input asp-for="RegisterViewModel.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="RegisterViewModel.ConfirmPassword" class="text-danger"></span>
             </div>
 
 

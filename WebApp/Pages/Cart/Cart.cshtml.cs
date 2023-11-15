@@ -67,6 +67,8 @@ namespace WebApp.Pages.Cart
 
         public async Task<IActionResult> OnPostUpdateOrderAsync()
         {
+
+
             var order = await _unitOfWork.Order.Get().AsQueryable()
                 .Include(c => c.Customer).ThenInclude(c => c.ApplicationUser)
                 .FirstOrDefaultAsync(c => c.Id == Order.Id);

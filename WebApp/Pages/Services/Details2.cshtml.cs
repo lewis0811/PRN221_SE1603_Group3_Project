@@ -218,7 +218,7 @@ namespace WebApp.Pages.Services
 
                 LaundryStores = LaundryStores.Except(filterServiceByStore).ToList();
                 OrderDetail = new();
-                ViewData["Error"] = $"{StoreService.LaundryStore.Name} is out of machine slot right now, please choose another store or try again later.";
+                ViewData["Error"] = $"This store is out of machine slot right now, please choose another store or try again later.";
                 return RedirectToPage("/Services/Details2", new { id = id, error = ViewData["Error"].ToString() });
             }
             ////////////////////////////////////////////////////////////////////////////////
@@ -246,10 +246,10 @@ namespace WebApp.Pages.Services
             if (matchStoreService != null)
             {
                 // Calculate the TotalPrice based on the matching StoreService's properties
-                orderDetailEntity.TotalPrice = matchStoreService.UnitPrice
+                orderDetailEntity.TotalPrice = matchStoreService.Weight
                     != null
-                    ? (matchStoreService.UnitPrice * OrderDetail.Quantity)
-                    : (matchStoreService.Weight * OrderDetail.Quantity);
+                    ? (matchStoreService.Weight * OrderDetail.Quantity * matchStoreService.UnitPrice)
+                    : (matchStoreService.UnitPrice * OrderDetail.Quantity);
                 orderDetailEntity.StoreServiceId = matchStoreService.Id;
             }
 
