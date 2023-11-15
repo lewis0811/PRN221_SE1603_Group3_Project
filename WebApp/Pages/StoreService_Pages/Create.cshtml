@@ -29,10 +29,21 @@
             {
                 
             } *@
-            <div class="form-group">
+            @if (User.IsInRole("LaundryStore"))
+            {
+                    <input type="hidden" disabled asp-for="StoreService.LaundryStoreId" class="form-control" value="@Model.StoreService.LaundryStoreId">
+@*                             <div class="form-group">
                 <label asp-for="StoreService.LaundryStoreId" class="control-label">Laundry Store</label>
-                <select asp-for="StoreService.LaundryStoreId" class="form-control" asp-items="ViewBag.LaundryStoreName"></select>
-            </div>
+
+            </div> *@
+            } else
+            {
+                <div class="form-group">
+                    <label asp-for="StoreService.LaundryStoreId" class="control-label">Laundry Store</label>
+                    <select asp-for="StoreService.LaundryStoreId" class="form-control" asp-items="ViewBag.LaundryStoreName"></select>
+                </div>
+            }
+
 
             <div class="form-group">
                 <label asp-for="StoreService.Weight" class="control-label">Weight (Optional)</label>

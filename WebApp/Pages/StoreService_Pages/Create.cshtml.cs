@@ -31,6 +31,8 @@ namespace WebApp.Pages.StoreService_Pages
             ViewData["ServiceId"] = new SelectList(_unitOfWork.Service.Get(), "Id", "Name");
             LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
                 .FirstOrDefaultAsync(c => c.Id.ToString() == id);
+            StoreService = await _unitOfWork.StoreService.Get().AsQueryable()
+                .FirstOrDefaultAsync(c => c.LaundryStoreId.ToString() == id);
             return Page();
         }
 
@@ -50,10 +52,13 @@ namespace WebApp.Pages.StoreService_Pages
                 
                 return Page();
             }
+            var newStoreService = new StoreService();
+            newStoreService = StoreService;
+            newStoreService.LaundryStoreId = int.Parse(id);
             //StoreService = _unitOfWork.StoreService.Get().AsQueryable().Include(c => c.LaundryStore)
             //    .FirstOrDefault(c => c.Id == StoreService.LaundryStoreId);
 
-            _unitOfWork.StoreService.Add(StoreService);
+            _unitOfWork.StoreService.Add(newStoreService);
             _unitOfWork.Save();
 
             return RedirectToPage("/StoreService_Pages/Index", routeValues: new { storeId });
