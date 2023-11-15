@@ -25,9 +25,9 @@ namespace WebApp.Pages.StoreService_Pages
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IActionResult> OnGet(string id = null)
+        public async Task<IActionResult> OnGet(string? id = null)
         {
-            ViewData["LaundryStoreId"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Address");
+            ViewData["LaundryStoreName"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Name");
             ViewData["ServiceId"] = new SelectList(_unitOfWork.Service.Get(), "Id", "Name");
             LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
                 .FirstOrDefaultAsync(c => c.Id.ToString() == id);
@@ -43,13 +43,15 @@ namespace WebApp.Pages.StoreService_Pages
             var storeId = id;
             if (!ModelState.IsValid)
             {
-                ViewData["LaundryStoreId"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Address");
+                ViewData["LaundryStoreName"] = new SelectList(_unitOfWork.LaundryStore.Get(), "Id", "Name");
                 ViewData["ServiceId"] = new SelectList(_unitOfWork.Service.Get(), "Id", "Name");
                 LaundryStore = await _unitOfWork.LaundryStore.Get().AsQueryable()
                     .FirstOrDefaultAsync(c => c.Id.ToString() == id);
                 
                 return Page();
             }
+            //StoreService = _unitOfWork.StoreService.Get().AsQueryable().Include(c => c.LaundryStore)
+            //    .FirstOrDefault(c => c.Id == StoreService.LaundryStoreId);
 
             _unitOfWork.StoreService.Add(StoreService);
             _unitOfWork.Save();

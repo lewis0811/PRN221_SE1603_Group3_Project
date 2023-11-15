@@ -47,7 +47,7 @@
             
     </table>
 
-    @if(Model.OrderDetails.Count <= 0)
+    @if(Model.OrderDetails.Count <= 0 || Model.OrderDetails.Count >= 5)
     {
         <div class="text-end">
             <button id="" class="btn btn-primary" disabled type="button" data-toggle="modal" data-target="#exampleModal">Đặt hàng</button>
